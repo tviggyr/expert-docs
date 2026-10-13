@@ -1,20 +1,26 @@
 {% extends "base.html" %}
+{% macro documents(groups) %}
+  <ul class="portal-tree__documents">
+  {% for group in groups %}
+    <li><details open><summary><span class="portal-tree__toggle">▾</span><span class="portal-tree__icon">▰</span>{{ group.title | e }}</summary>
+      <ul>{% for document in group.pages %}<li><span class="portal-tree__icon">▤</span><a href="{{ document.url | url | e }}">{{ document.title | e }}</a>{% if document.description %}<small>{{ document.description | e }}</small>{% endif %}</li>{% endfor %}</ul>
+    </details></li>
+  {% endfor %}
+  </ul>
+{% endmacro %}
 {% block content %}
+  {% set portal = config.extra.portal_tree | default([]) %}
+  {% set catalogs = config.extra.portal_catalogs | default({}) %}
   {% if page and page.is_homepage %}
-    <section class="portal-home">
-      <p class="portal-home__eyebrow">EXPERT24</p>
-      <h1>Документація Expert24</h1>
-      <p class="portal-home__lead">Технічна документація, інструкції та керівництва модулів Magento.</p>
-      <div class="portal-cards">
-        {% for section in config.extra.portal_sections | default([]) %}
-          <a class="portal-card" href="{{ section.url | url | e }}">
-            <span class="portal-card__title">{{ section.title | e }}</span>
-            {% if section.description %}<span class="portal-card__description">{{ section.description | e }}</span>{% endif %}
-            <span class="portal-card__meta">{{ section.page_count }} {{ 'сторінка' if section.page_count == 1 else 'сторінок' }} →</span>
-          </a>
-        {% endfor %}
-      </div>
+    <section class="portal-home"><p class="portal-home__eyebrow">EXPERT24</p><h1>Документація Expert24</h1>
+      <p class="portal-home__lead">Технічна документація, посібники користувача та керівництва з налаштування модулів Expert24.</p>
+      <h2>Зміст документації</h2><div class="portal-tree">
+      {% for section in portal %}<details open><summary><span class="portal-tree__toggle">▾</span><span class="portal-tree__icon">▰</span>{{ section.title | e }}</summary><ul>
+        {% for module in section.modules %}<li><details open><summary aria-label="Розгорнути модуль"><span class="portal-tree__toggle">▾</span><span class="portal-tree__icon">▰</span></summary><a class="portal-tree__module" href="{{ module.url | url | e }}">{{ module.title | e }}</a>{{ documents(module.groups) }}</details></li>{% endfor %}
+      </ul></details>{% endfor %}</div>
     </section>
+  {% elif page and page.url in catalogs %}
+    {% set catalog = catalogs[page.url] %}<section class="portal-catalog"><p class="portal-home__eyebrow">{{ catalog.section | e }}</p><h1>{{ catalog.title | e }}</h1><p class="portal-home__lead">{{ catalog.description | e }}</p><h2>Зміст</h2><div class="portal-tree">{{ documents(catalog.groups) }}</div></section>{% if catalog.has_source_index %}{{ super() }}{% endif %}
   {% else %}
     {% set crumbs = config.extra.portal_breadcrumbs | default({}) %}
     {% set trail = crumbs.get(page.url, []) if page else [] %}

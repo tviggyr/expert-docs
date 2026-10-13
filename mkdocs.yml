@@ -16,17 +16,23 @@ plugins:
 - search
 nav:
 - Головна: index.md
-- Аксесуари:
-  - PHASE 2C: published/backend/accessories/PHASE-2C.md
-  - PHASE 2D: published/backend/accessories/PHASE-2D.md
-  - accessories rules manager guide uk with images: published/backend/accessories/accessories_rules_manager_guide_uk_with_images.md
-- Схожі товари:
-  - PHASE 1: published/backend/similar-products/PHASE-1.md
-  - PHASE 2: published/backend/similar-products/PHASE-2.md
-  - PHASE 3: published/backend/similar-products/PHASE-3.md
-  - PHASE 4: published/backend/similar-products/PHASE-4.md
-  - PHASE 5: published/backend/similar-products/PHASE-5.md
-  - PHASE 6: published/backend/similar-products/PHASE-6.md
+- Модулі Magento:
+  - Аксесуари:
+    - Огляд: published/backend/accessories/index.md
+    - Посібники користувача:
+      - Керування правилами аксесуарів: published/backend/accessories/accessories_rules_manager_guide_uk_with_images.md
+    - Технічна документація:
+      - Фаза 2C — Черги та виконання: published/backend/accessories/PHASE-2C.md
+      - Фаза 2D — Автоматична перевірка: published/backend/accessories/PHASE-2D.md
+  - Схожі товари:
+    - Огляд: published/backend/similar-products/index.md
+    - Технічна документація:
+      - Фаза 1: published/backend/similar-products/PHASE-1.md
+      - Фаза 2: published/backend/similar-products/PHASE-2.md
+      - Фаза 3: published/backend/similar-products/PHASE-3.md
+      - Фаза 4: published/backend/similar-products/PHASE-4.md
+      - Фаза 5: published/backend/similar-products/PHASE-5.md
+      - Фаза 6: published/backend/similar-products/PHASE-6.md
 extra_css:
 - assets/portal.css
 extra_javascript:
@@ -42,66 +48,180 @@ extra:
     page_count: 6
     url: published/backend/similar-products/PHASE-1/
   portal_breadcrumbs:
+    published/backend/accessories/accessories_rules_manager_guide_uk_with_images/:
+    - title: Головна
+      url: ''
+    - title: Модулі Magento
+      url: ''
+    - title: Аксесуари
+      url: published/backend/accessories/
+    - title: Посібники користувача
+      url: ''
+    - title: Керування правилами аксесуарів
+      url: ''
     published/backend/accessories/PHASE-2C/:
     - title: Головна
       url: ''
+    - title: Модулі Magento
+      url: ''
     - title: Аксесуари
-      url: published/backend/accessories/PHASE-2C/
-    - title: PHASE 2C
+      url: published/backend/accessories/
+    - title: Технічна документація
+      url: ''
+    - title: Фаза 2C — Черги та виконання
       url: ''
     published/backend/accessories/PHASE-2D/:
     - title: Головна
       url: ''
-    - title: Аксесуари
-      url: published/backend/accessories/PHASE-2C/
-    - title: PHASE 2D
+    - title: Модулі Magento
       url: ''
-    published/backend/accessories/accessories_rules_manager_guide_uk_with_images/:
+    - title: Аксесуари
+      url: published/backend/accessories/
+    - title: Технічна документація
+      url: ''
+    - title: Фаза 2D — Автоматична перевірка
+      url: ''
+    published/backend/accessories/:
     - title: Головна
       url: ''
+    - title: Модулі Magento
+      url: ''
     - title: Аксесуари
-      url: published/backend/accessories/PHASE-2C/
-    - title: accessories rules manager guide uk with images
       url: ''
     published/backend/similar-products/PHASE-1/:
     - title: Головна
       url: ''
+    - title: Модулі Magento
+      url: ''
     - title: Схожі товари
-      url: published/backend/similar-products/PHASE-1/
-    - title: PHASE 1
+      url: published/backend/similar-products/
+    - title: Технічна документація
+      url: ''
+    - title: Фаза 1
       url: ''
     published/backend/similar-products/PHASE-2/:
     - title: Головна
       url: ''
+    - title: Модулі Magento
+      url: ''
     - title: Схожі товари
-      url: published/backend/similar-products/PHASE-1/
-    - title: PHASE 2
+      url: published/backend/similar-products/
+    - title: Технічна документація
+      url: ''
+    - title: Фаза 2
       url: ''
     published/backend/similar-products/PHASE-3/:
     - title: Головна
       url: ''
+    - title: Модулі Magento
+      url: ''
     - title: Схожі товари
-      url: published/backend/similar-products/PHASE-1/
-    - title: PHASE 3
+      url: published/backend/similar-products/
+    - title: Технічна документація
+      url: ''
+    - title: Фаза 3
       url: ''
     published/backend/similar-products/PHASE-4/:
     - title: Головна
       url: ''
+    - title: Модулі Magento
+      url: ''
     - title: Схожі товари
-      url: published/backend/similar-products/PHASE-1/
-    - title: PHASE 4
+      url: published/backend/similar-products/
+    - title: Технічна документація
+      url: ''
+    - title: Фаза 4
       url: ''
     published/backend/similar-products/PHASE-5/:
     - title: Головна
       url: ''
+    - title: Модулі Magento
+      url: ''
     - title: Схожі товари
-      url: published/backend/similar-products/PHASE-1/
-    - title: PHASE 5
+      url: published/backend/similar-products/
+    - title: Технічна документація
+      url: ''
+    - title: Фаза 5
       url: ''
     published/backend/similar-products/PHASE-6/:
     - title: Головна
       url: ''
-    - title: Схожі товари
-      url: published/backend/similar-products/PHASE-1/
-    - title: PHASE 6
+    - title: Модулі Magento
       url: ''
+    - title: Схожі товари
+      url: published/backend/similar-products/
+    - title: Технічна документація
+      url: ''
+    - title: Фаза 6
+      url: ''
+    published/backend/similar-products/:
+    - title: Головна
+      url: ''
+    - title: Модулі Magento
+      url: ''
+    - title: Схожі товари
+      url: ''
+  portal_tree:
+  - title: Модулі Magento
+    modules:
+    - title: Аксесуари
+      url: published/backend/accessories/
+      groups: &id001
+      - title: Посібники користувача
+        pages:
+        - title: Керування правилами аксесуарів
+          description: Покрокова інструкція для менеджера
+          path: published/backend/accessories/accessories_rules_manager_guide_uk_with_images.md
+          url: published/backend/accessories/accessories_rules_manager_guide_uk_with_images/
+      - title: Технічна документація
+        pages:
+        - title: Фаза 2C — Черги та виконання
+          description: ''
+          path: published/backend/accessories/PHASE-2C.md
+          url: published/backend/accessories/PHASE-2C/
+        - title: Фаза 2D — Автоматична перевірка
+          description: ''
+          path: published/backend/accessories/PHASE-2D.md
+          url: published/backend/accessories/PHASE-2D/
+    - title: Схожі товари
+      url: published/backend/similar-products/
+      groups: &id002
+      - title: Технічна документація
+        pages:
+        - title: Фаза 1
+          description: ''
+          path: published/backend/similar-products/PHASE-1.md
+          url: published/backend/similar-products/PHASE-1/
+        - title: Фаза 2
+          description: ''
+          path: published/backend/similar-products/PHASE-2.md
+          url: published/backend/similar-products/PHASE-2/
+        - title: Фаза 3
+          description: ''
+          path: published/backend/similar-products/PHASE-3.md
+          url: published/backend/similar-products/PHASE-3/
+        - title: Фаза 4
+          description: ''
+          path: published/backend/similar-products/PHASE-4.md
+          url: published/backend/similar-products/PHASE-4/
+        - title: Фаза 5
+          description: ''
+          path: published/backend/similar-products/PHASE-5.md
+          url: published/backend/similar-products/PHASE-5/
+        - title: Фаза 6
+          description: ''
+          path: published/backend/similar-products/PHASE-6.md
+          url: published/backend/similar-products/PHASE-6/
+  portal_catalogs:
+    published/backend/accessories/:
+      section: Модулі Magento
+      title: Аксесуари
+      description: Правила сумісності та керування аксесуарами
+      groups: *id001
+      has_source_index: false
+    published/backend/similar-products/:
+      section: Модулі Magento
+      title: Схожі товари
+      description: Налаштування автоматичного підбору товарів
+      groups: *id002
+      has_source_index: false
