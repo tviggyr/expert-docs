@@ -20,7 +20,7 @@ nav:
   - Аксесуари:
     - Огляд: published/backend/accessories/index.md
     - Посібники користувача:
-      - Керування правилами аксесуарів: published/backend/accessories/accessories_rules_manager_guide_uk_with_images.md
+      - Керування правилами аксесуарів: published/backend/accessories/accessories-guide.md
     - Технічна документація:
       - Фаза 2C — Черги та виконання: published/backend/accessories/PHASE-2C.md
       - Фаза 2D — Автоматична перевірка: published/backend/accessories/PHASE-2D.md
@@ -48,7 +48,7 @@ extra:
     page_count: 6
     url: published/backend/similar-products/PHASE-1/
   portal_breadcrumbs:
-    published/backend/accessories/accessories_rules_manager_guide_uk_with_images/:
+    published/backend/accessories/accessories-guide/:
     - title: Головна
       url: ''
     - title: Модулі Magento
@@ -171,8 +171,8 @@ extra:
         pages:
         - title: Керування правилами аксесуарів
           description: Покрокова інструкція для менеджера
-          path: published/backend/accessories/accessories_rules_manager_guide_uk_with_images.md
-          url: published/backend/accessories/accessories_rules_manager_guide_uk_with_images/
+          path: published/backend/accessories/accessories-guide.md
+          url: published/backend/accessories/accessories-guide/
       - title: Технічна документація
         pages:
         - title: Фаза 2C — Черги та виконання
