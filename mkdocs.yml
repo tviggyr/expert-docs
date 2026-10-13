@@ -128,12 +128,14 @@ extra:
       url: published/backend/accessories/
       groups: &id001
       - title: Посібники користувача
+        key: Посібники користувача|published/backend/accessories/accessories-guide.md
         pages:
         - title: Керування правилами аксесуарів
           description: Покрокова інструкція для менеджера
           path: published/backend/accessories/accessories-guide.md
           url: published/backend/accessories/accessories-guide/
       - title: Технічна документація
+        key: Технічна документація|published/backend/accessories/PHASE-2C.md|published/backend/accessories/PHASE-2D.md
         pages:
         - title: Фаза 2C — Черги та виконання
           description: ''
@@ -147,6 +149,7 @@ extra:
       url: published/backend/similar-products/
       groups: &id002
       - title: Технічна документація
+        key: Технічна документація|published/backend/similar-products/PHASE-1.md|published/backend/similar-products/PHASE-2.md|published/backend/similar-products/PHASE-3.md|published/backend/similar-products/PHASE-4.md|published/backend/similar-products/PHASE-5.md|published/backend/similar-products/PHASE-6.md
         pages:
         - title: Фаза 1
           description: ''

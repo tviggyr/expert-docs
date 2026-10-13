@@ -1,19 +1,22 @@
 (function () {
-  const storagePrefix = 'expert24:docs-tree:v2:';
+  const storagePrefix = 'expert24:docs-tree:v3:';
   function getStorage() {
     try { return window.localStorage; } catch (error) { return null; }
   }
+  function stateKey(branch) {
+    return storagePrefix + branch.dataset.treeId;
+  }
+  function savedState(storage, branch) {
+    try {
+      const value = storage.getItem(stateKey(branch));
+      return value === 'true' ? true : value === 'false' ? false : null;
+    } catch (error) { return null; }
+  }
   function restoreTree(tree, storage) {
-    const saved = storage ? (() => {
-      try {
-        const value = JSON.parse(storage.getItem(storagePrefix + tree.dataset.treeScope) || '{}');
-        return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
-      } catch (error) { return {}; }
-    })() : {};
     const restored = new Map();
     tree.querySelectorAll('details[data-tree-id]').forEach((branch) => {
-      if (Object.prototype.hasOwnProperty.call(saved, branch.dataset.treeId)) {
-        const isOpen = Boolean(saved[branch.dataset.treeId]);
+      const isOpen = storage ? savedState(storage, branch) : null;
+      if (isOpen !== null) {
         if (branch.open !== isOpen) {
           restored.set(branch.dataset.treeId, isOpen);
           branch.open = isOpen;
@@ -27,11 +30,7 @@
           }
           restored.delete(branch.dataset.treeId);
           try {
-            const key = storagePrefix + tree.dataset.treeScope;
-            const state = JSON.parse(storage.getItem(key) || '{}');
-            const next = state && typeof state === 'object' && !Array.isArray(state) ? state : {};
-            next[branch.dataset.treeId] = branch.open;
-            storage.setItem(key, JSON.stringify(next));
+            storage.setItem(stateKey(branch), branch.open ? 'true' : 'false');
           } catch (error) { /* Storage can be disabled by browser policy. */ }
         });
       }
