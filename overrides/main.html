@@ -2,14 +2,19 @@
 {% macro chevron() %}<svg class="expert-docs-tree__chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>{% endmacro %}
 {% macro folder() %}<span class="expert-docs-tree__folder" aria-hidden="true"><svg class="expert-docs-tree__folder-closed" viewBox="0 0 24 24"><path d="M20 20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5l2 3h5a2 2 0 0 1 2 2Z"/></svg><svg class="expert-docs-tree__folder-open" viewBox="0 0 24 24"><path d="m6 14 1.5-6h13l-1.5 6a2 2 0 0 1-2 1.5H7.5A2 2 0 0 1 6 14Z"/><path d="M3 6h5l2 3h11"/></svg></span>{% endmacro %}
 {% macro file_icon() %}<svg class="expert-docs-tree__file" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg>{% endmacro %}
-{% macro documents(groups) %}
+{% macro documents(groups, tree_scope, collapse_technical=false) %}
   <ul class="expert-docs-tree__children">
   {% for group in groups %}
-    <li class="expert-docs-tree__item"><details class="expert-docs-tree__branch" open><summary class="expert-docs-tree__summary"><span class="expert-docs-tree__toggle">{{ chevron() }}</span>{{ folder() }}<span class="expert-docs-tree__label expert-docs-tree__label--group">{{ group.title | e }}</span></summary>
+    <li class="expert-docs-tree__item"><details class="expert-docs-tree__branch" data-tree-id="{{ tree_scope }}:group:{{ group.key | e }}"{% if not (collapse_technical and group.title == 'Технічна документація') %} open{% endif %}><summary class="expert-docs-tree__summary"><span class="expert-docs-tree__toggle">{{ chevron() }}</span>{{ folder() }}<span class="expert-docs-tree__label expert-docs-tree__label--group">{{ group.title | e }}</span></summary>
       <ul class="expert-docs-tree__children">{% for document in group.pages %}<li class="expert-docs-tree__item expert-docs-tree__item--document">{{ file_icon() }}<a class="expert-docs-tree__document{% if page and page.url == document.url %} is-active{% endif %}" href="{{ document.url | url | e }}">{{ document.title | e }}</a>{% if document.description %}<small>{{ document.description | e }}</small>{% endif %}</li>{% endfor %}</ul>
     </details></li>
   {% endfor %}
   </ul>
+{% endmacro %}
+{% macro render_breadcrumbs(trail, site_url) %}
+  {% if trail %}<nav class="portal-breadcrumbs" aria-label="Навігаційний шлях"><ol>
+    {% for crumb in trail %}<li>{% if loop.first %}<a href="{{ site_url | e }}">{{ crumb.title | e }}</a>{% elif crumb.url %}<a href="{{ crumb.url | url | e }}">{{ crumb.title | e }}</a>{% else %}<span aria-current="page">{{ crumb.title | e }}</span>{% endif %}</li>{% endfor %}
+  </ol></nav>{% endif %}
 {% endmacro %}
 {% block styles %}
   {{ super() }}
@@ -26,24 +31,20 @@
 {% block content %}
   {% set portal = config.extra.portal_tree | default([]) %}
   {% set catalogs = config.extra.portal_catalogs | default({}) %}
+  {% set crumbs = config.extra.portal_breadcrumbs | default({}) %}
   {% if page and page.is_homepage %}
     <section class="portal-home"><p class="portal-home__eyebrow">EXPERT24</p><h1>Документація Expert24</h1>
       <p class="portal-home__lead">Технічна документація, посібники користувача та керівництва з налаштування модулів Expert24.</p>
-      <h2>Зміст документації</h2><nav class="expert-docs-tree" aria-label="Зміст документації">
-      {% for section in portal %}<details class="expert-docs-tree__branch" open><summary class="expert-docs-tree__summary"><span class="expert-docs-tree__toggle">{{ chevron() }}</span>{{ folder() }}<span class="expert-docs-tree__label expert-docs-tree__label--section">{{ section.title | e }}</span></summary><ul class="expert-docs-tree__children">
-        {% for module in section.modules %}<li class="expert-docs-tree__item"><details class="expert-docs-tree__branch expert-docs-tree__branch--module" open><summary class="expert-docs-tree__summary expert-docs-tree__summary--toggle" aria-label="Розгорнути або згорнути модуль {{ module.title | e }}"><span class="expert-docs-tree__toggle">{{ chevron() }}</span></summary><a class="expert-docs-tree__module" href="{{ module.url | url | e }}">{{ folder() }}<span class="expert-docs-tree__label expert-docs-tree__label--module">{{ module.title | e }}</span></a>{{ documents(module.groups) }}</details></li>{% endfor %}
+      <h2>Зміст документації</h2><nav class="expert-docs-tree" aria-label="Зміст документації" data-tree-scope="home">
+      {% for section in portal %}<details class="expert-docs-tree__branch" data-tree-id="home:section:{{ section.title | e }}" open><summary class="expert-docs-tree__summary"><span class="expert-docs-tree__toggle">{{ chevron() }}</span>{{ folder() }}<span class="expert-docs-tree__label expert-docs-tree__label--section">{{ section.title | e }}</span></summary><ul class="expert-docs-tree__children">
+        {% for module in section.modules %}<li class="expert-docs-tree__item"><details class="expert-docs-tree__branch expert-docs-tree__branch--module" data-tree-id="home:module:{{ module.url | e }}" open><summary class="expert-docs-tree__summary expert-docs-tree__summary--toggle" aria-label="Розгорнути або згорнути модуль {{ module.title | e }}"><span class="expert-docs-tree__toggle">{{ chevron() }}</span><a class="expert-docs-tree__module" href="{{ module.url | url | e }}">{{ folder() }}<span class="expert-docs-tree__label expert-docs-tree__label--module">{{ module.title | e }}</span></a></summary>{{ documents(module.groups, 'home:module:' ~ module.url, true) }}</details></li>{% endfor %}
       </ul></details>{% endfor %}</nav>
     </section>
   {% elif page and page.url in catalogs %}
-    {% set catalog = catalogs[page.url] %}<section class="portal-catalog"><p class="portal-home__eyebrow">{{ catalog.section | e }}</p><h1>{{ catalog.title | e }}</h1><p class="portal-home__lead">{{ catalog.description | e }}</p><h2>Зміст</h2><nav class="expert-docs-tree" aria-label="Зміст модуля">{{ documents(catalog.groups) }}</nav></section>{% if catalog.has_source_index %}{{ super() }}{% endif %}
+    {% set catalog = catalogs[page.url] %}{{ render_breadcrumbs(crumbs.get(page.url, []), config.site_url) }}<section class="portal-catalog"><p class="portal-home__eyebrow">{{ catalog.section | e }}</p><h1>{{ catalog.title | e }}</h1><p class="portal-home__lead">{{ catalog.description | e }}</p><h2>Зміст</h2><nav class="expert-docs-tree" aria-label="Зміст модуля" data-tree-scope="catalog:{{ page.url | e }}">{{ documents(catalog.groups, 'catalog:' ~ page.url) }}</nav></section>{% if catalog.has_source_index %}{{ super() }}{% endif %}
   {% else %}
-    {% set crumbs = config.extra.portal_breadcrumbs | default({}) %}
     {% set trail = crumbs.get(page.url, []) if page else [] %}
-    {% if trail %}
-      <nav class="portal-breadcrumbs" aria-label="Навігаційний шлях"><ol>
-        {% for crumb in trail %}<li>{% if loop.first %}<a href="{{ config.site_url | e }}">{{ crumb.title | e }}</a>{% elif crumb.url %}<a href="{{ crumb.url | url | e }}">{{ crumb.title | e }}</a>{% else %}<span aria-current="page">{{ crumb.title | e }}</span>{% endif %}</li>{% endfor %}
-      </ol></nav>
-    {% endif %}
+    {{ render_breadcrumbs(trail, config.site_url) }}
     {{ super() }}
   {% endif %}
 {% endblock %}

@@ -51,113 +51,73 @@ extra:
     published/backend/accessories/accessories-guide/:
     - title: Головна
       url: ''
-    - title: Модулі Magento
-      url: ''
     - title: Аксесуари
       url: published/backend/accessories/
-    - title: Посібники користувача
-      url: ''
     - title: Керування правилами аксесуарів
       url: ''
     published/backend/accessories/PHASE-2C/:
     - title: Головна
       url: ''
-    - title: Модулі Magento
-      url: ''
     - title: Аксесуари
       url: published/backend/accessories/
-    - title: Технічна документація
-      url: ''
     - title: Фаза 2C — Черги та виконання
       url: ''
     published/backend/accessories/PHASE-2D/:
     - title: Головна
       url: ''
-    - title: Модулі Magento
-      url: ''
     - title: Аксесуари
       url: published/backend/accessories/
-    - title: Технічна документація
-      url: ''
     - title: Фаза 2D — Автоматична перевірка
       url: ''
     published/backend/accessories/:
     - title: Головна
-      url: ''
-    - title: Модулі Magento
       url: ''
     - title: Аксесуари
       url: ''
     published/backend/similar-products/PHASE-1/:
     - title: Головна
       url: ''
-    - title: Модулі Magento
-      url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: Технічна документація
-      url: ''
     - title: Фаза 1
       url: ''
     published/backend/similar-products/PHASE-2/:
     - title: Головна
       url: ''
-    - title: Модулі Magento
-      url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: Технічна документація
-      url: ''
     - title: Фаза 2
       url: ''
     published/backend/similar-products/PHASE-3/:
     - title: Головна
       url: ''
-    - title: Модулі Magento
-      url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: Технічна документація
-      url: ''
     - title: Фаза 3
       url: ''
     published/backend/similar-products/PHASE-4/:
     - title: Головна
       url: ''
-    - title: Модулі Magento
-      url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: Технічна документація
-      url: ''
     - title: Фаза 4
       url: ''
     published/backend/similar-products/PHASE-5/:
     - title: Головна
       url: ''
-    - title: Модулі Magento
-      url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: Технічна документація
-      url: ''
     - title: Фаза 5
       url: ''
     published/backend/similar-products/PHASE-6/:
     - title: Головна
       url: ''
-    - title: Модулі Magento
-      url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: Технічна документація
-      url: ''
     - title: Фаза 6
       url: ''
     published/backend/similar-products/:
     - title: Головна
-      url: ''
-    - title: Модулі Magento
       url: ''
     - title: Схожі товари
       url: ''

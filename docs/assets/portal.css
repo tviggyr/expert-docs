@@ -76,4 +76,10 @@
 .portal-lightbox img { display: block; max-height: 90vh; max-width: 94vw; }
 @media screen and (min-width: 76.25em) { .md-sidebar--primary { display: none; } .md-main__inner { grid-template-columns: minmax(0, 1fr) 12.1rem; } .md-content { max-width: none; } }
 @media screen and (max-width: 76.1875em) { .portal-home, .portal-catalog { padding-top: 1.5rem; } .md-typeset .expert-docs-tree { max-width: none; } .md-typeset .expert-docs-tree .expert-docs-tree__children { margin-inline-start: .4rem; padding-inline-start: .5rem; } }
+.md-typeset .portal-breadcrumbs { font-size: .8125rem; margin: 0 0 .8rem; }
+.md-typeset .portal-breadcrumbs ol { align-items: center; display: flex; flex-direction: row; flex-wrap: wrap; gap: .35rem; list-style: none; margin: 0; padding: 0; }
+.md-typeset .portal-breadcrumbs li { align-items: center; display: inline-flex; margin: 0; padding: 0; }
+.md-typeset .portal-breadcrumbs li + li::before { content: '→'; margin-right: .35rem; color: var(--md-default-fg-color--light); }
+.md-typeset .expert-docs-tree .expert-docs-tree__summary--toggle { width: auto; padding-inline-start: .15rem; }
+.md-typeset .expert-docs-tree .expert-docs-tree__summary--toggle .expert-docs-tree__module { position: static; z-index: auto; display: inline-flex; align-items: center; gap: .35rem; min-height: 1.8rem; max-width: calc(100% - 1.1rem); padding: .15rem .25rem; border-radius: .25rem; }
 
