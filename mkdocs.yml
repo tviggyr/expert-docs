@@ -10,18 +10,98 @@ theme:
   - navigation.top
   - search.suggest
   - search.highlight
+  - navigation.footer
+  custom_dir: overrides
 plugins:
 - search
 nav:
 - Головна: index.md
-- Accessories:
+- Аксесуари:
   - PHASE 2C: published/backend/accessories/PHASE-2C.md
   - PHASE 2D: published/backend/accessories/PHASE-2D.md
   - accessories rules manager guide uk with images: published/backend/accessories/accessories_rules_manager_guide_uk_with_images.md
-- Similar Products:
+- Схожі товари:
   - PHASE 1: published/backend/similar-products/PHASE-1.md
   - PHASE 2: published/backend/similar-products/PHASE-2.md
   - PHASE 3: published/backend/similar-products/PHASE-3.md
   - PHASE 4: published/backend/similar-products/PHASE-4.md
   - PHASE 5: published/backend/similar-products/PHASE-5.md
   - PHASE 6: published/backend/similar-products/PHASE-6.md
+extra_css:
+- assets/portal.css
+extra_javascript:
+- assets/portal.js
+extra:
+  portal_sections:
+  - title: Аксесуари
+    description: Правила сумісності та керування аксесуарами
+    page_count: 3
+    url: published/backend/accessories/PHASE-2C/
+  - title: Схожі товари
+    description: Налаштування автоматичного підбору товарів
+    page_count: 6
+    url: published/backend/similar-products/PHASE-1/
+  portal_breadcrumbs:
+    published/backend/accessories/PHASE-2C/:
+    - title: Головна
+      url: ''
+    - title: Аксесуари
+      url: published/backend/accessories/PHASE-2C/
+    - title: PHASE 2C
+      url: ''
+    published/backend/accessories/PHASE-2D/:
+    - title: Головна
+      url: ''
+    - title: Аксесуари
+      url: published/backend/accessories/PHASE-2C/
+    - title: PHASE 2D
+      url: ''
+    published/backend/accessories/accessories_rules_manager_guide_uk_with_images/:
+    - title: Головна
+      url: ''
+    - title: Аксесуари
+      url: published/backend/accessories/PHASE-2C/
+    - title: accessories rules manager guide uk with images
+      url: ''
+    published/backend/similar-products/PHASE-1/:
+    - title: Головна
+      url: ''
+    - title: Схожі товари
+      url: published/backend/similar-products/PHASE-1/
+    - title: PHASE 1
+      url: ''
+    published/backend/similar-products/PHASE-2/:
+    - title: Головна
+      url: ''
+    - title: Схожі товари
+      url: published/backend/similar-products/PHASE-1/
+    - title: PHASE 2
+      url: ''
+    published/backend/similar-products/PHASE-3/:
+    - title: Головна
+      url: ''
+    - title: Схожі товари
+      url: published/backend/similar-products/PHASE-1/
+    - title: PHASE 3
+      url: ''
+    published/backend/similar-products/PHASE-4/:
+    - title: Головна
+      url: ''
+    - title: Схожі товари
+      url: published/backend/similar-products/PHASE-1/
+    - title: PHASE 4
+      url: ''
+    published/backend/similar-products/PHASE-5/:
+    - title: Головна
+      url: ''
+    - title: Схожі товари
+      url: published/backend/similar-products/PHASE-1/
+    - title: PHASE 5
+      url: ''
+    published/backend/similar-products/PHASE-6/:
+    - title: Головна
+      url: ''
+    - title: Схожі товари
+      url: published/backend/similar-products/PHASE-1/
+    - title: PHASE 6
+      url: ''
