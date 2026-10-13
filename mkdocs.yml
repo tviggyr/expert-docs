@@ -1,0 +1,20 @@
+
+site_name: Expert24 Documentation
+site_description: Документація проєкту Expert24
+site_url: https://tviggyr.github.io/expert-docs/
+
+theme:
+  name: material
+  language: uk
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+
+plugins:
+  - search
+
+nav:
+  - Головна: index.md
