@@ -16,5 +16,11 @@ theme:
 plugins:
   - search
 
+
 nav:
   - Головна: index.md
+  - Аксесуари:
+      - Інструкція користувача: accessories/accessories_rules_manager_guide_uk_with_images.md
+      - Етап 2C: accessories/PHASE-2C.md
+      - Етап 2D: accessories/PHASE-2D.md
+
