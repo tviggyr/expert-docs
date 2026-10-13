@@ -1,19 +1,27 @@
 site_name: Expert24 Documentation
 site_description: Документація проєкту Expert24
 site_url: https://tviggyr.github.io/expert-docs/
-
 theme:
   name: material
   language: uk
   features:
-    - navigation.sections
-    - navigation.expand
-    - navigation.top
-    - search.suggest
-    - search.highlight
-
+  - navigation.sections
+  - navigation.expand
+  - navigation.top
+  - search.suggest
+  - search.highlight
 plugins:
-  - search
-
+- search
 nav:
-  - Головна: index.md
+- Головна: index.md
+- Accessories:
+  - PHASE 2C: published/backend/accessories/PHASE-2C.md
+  - PHASE 2D: published/backend/accessories/PHASE-2D.md
+  - accessories rules manager guide uk with images: published/backend/accessories/accessories_rules_manager_guide_uk_with_images.md
+- Similar Products:
+  - PHASE 1: published/backend/similar-products/PHASE-1.md
+  - PHASE 2: published/backend/similar-products/PHASE-2.md
+  - PHASE 3: published/backend/similar-products/PHASE-3.md
+  - PHASE 4: published/backend/similar-products/PHASE-4.md
+  - PHASE 5: published/backend/similar-products/PHASE-5.md
+  - PHASE 6: published/backend/similar-products/PHASE-6.md
