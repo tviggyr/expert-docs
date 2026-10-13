@@ -88,4 +88,10 @@
 .portal-home h2 { margin: 0 0 .5rem; }
 .portal-home .expert-docs-tree { margin-top: 0; }
 .portal-home__eyebrow { color: var(--md-primary-fg-color); }
+.portal-home__contents-header { align-items: center; display: flex; flex-wrap: wrap; gap: .35rem 1rem; justify-content: space-between; margin: 0 0 .5rem; }
+.portal-home__contents-header h2 { margin: 0; }
+.portal-home__tree-toggle { align-items: center; background: var(--md-code-bg-color); border: 1px solid var(--md-default-fg-color--lighter); border-radius: .25rem; color: var(--md-default-fg-color); cursor: pointer; display: inline-flex; font: inherit; font-size: .75rem; gap: .35rem; padding: .35rem .55rem; }
+.portal-home__tree-toggle:hover { color: var(--md-typeset-a-color); }
+.portal-home__tree-toggle:focus-visible { outline: 2px solid var(--md-accent-fg-color); outline-offset: 2px; }
+.portal-home__tree-toggle svg { fill: none; height: .9rem; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; width: .9rem; }
 
