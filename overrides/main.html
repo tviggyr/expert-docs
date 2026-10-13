@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+  {% if page and page.is_homepage %}
+    <section class="portal-home">
+      <p class="portal-home__eyebrow">EXPERT24</p>
+      <h1>Документація Expert24</h1>
+      <p class="portal-home__lead">Технічна документація, інструкції та керівництва модулів Magento.</p>
+      <div class="portal-cards">
+        {% for section in config.extra.portal_sections | default([]) %}
+          <a class="portal-card" href="{{ section.url | url | e }}">
+            <span class="portal-card__title">{{ section.title | e }}</span>
+            {% if section.description %}<span class="portal-card__description">{{ section.description | e }}</span>{% endif %}
+            <span class="portal-card__meta">{{ section.page_count }} {{ 'сторінка' if section.page_count == 1 else 'сторінок' }} →</span>
+          </a>
+        {% endfor %}
+      </div>
+    </section>
+  {% else %}
+    {% set crumbs = config.extra.portal_breadcrumbs | default({}) %}
+    {% set trail = crumbs.get(page.url, []) if page else [] %}
+    {% if trail %}
+      <nav class="portal-breadcrumbs" aria-label="Навігаційний шлях"><ol>
+        {% for crumb in trail %}<li>{% if loop.first %}<a href="{{ config.site_url | e }}">{{ crumb.title | e }}</a>{% elif crumb.url %}<a href="{{ crumb.url | url | e }}">{{ crumb.title | e }}</a>{% else %}<span aria-current="page">{{ crumb.title | e }}</span>{% endif %}</li>{% endfor %}
+      </ol></nav>
+    {% endif %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
