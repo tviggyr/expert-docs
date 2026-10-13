@@ -87,4 +87,5 @@
 .portal-home .portal-home__lead { margin: 0 0 1.25rem; }
 .portal-home h2 { margin: 0 0 .5rem; }
 .portal-home .expert-docs-tree { margin-top: 0; }
+.portal-home__eyebrow { color: var(--md-primary-fg-color); }
 
