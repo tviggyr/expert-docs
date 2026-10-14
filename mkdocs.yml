@@ -39,6 +39,8 @@ nav:
       - Фаза 2D — Автоматична перевірка: published/backend/accessories/PHASE-2D.md
   - Схожі товари:
     - Огляд: published/backend/similar-products/index.md
+    - Посібники користувача:
+      - Схожі товари: published/backend/similar-products/similar_products.md
     - Технічна документація:
       - Фаза 1: published/backend/similar-products/PHASE-1.md
       - Фаза 2: published/backend/similar-products/PHASE-2.md
@@ -86,6 +88,13 @@ extra:
     - title: Головна
       url: ''
     - title: Аксесуари
+      url: ''
+    published/backend/similar-products/similar_products/:
+    - title: Головна
+      url: ''
+    - title: Схожі товари
+      url: published/backend/similar-products/
+    - title: Схожі товари
       url: ''
     published/backend/similar-products/PHASE-1/:
     - title: Головна
@@ -161,6 +170,13 @@ extra:
     - title: Схожі товари
       url: published/backend/similar-products/
       groups: &id002
+      - title: Посібники користувача
+        key: Посібники користувача|published/backend/similar-products/similar_products.md
+        pages:
+        - title: Схожі товари
+          description: Покрокова інструкція для менеджера
+          path: published/backend/similar-products/similar_products.md
+          url: published/backend/similar-products/similar_products/
       - title: Технічна документація
         key: Технічна документація|published/backend/similar-products/PHASE-1.md|published/backend/similar-products/PHASE-2.md|published/backend/similar-products/PHASE-3.md|published/backend/similar-products/PHASE-4.md|published/backend/similar-products/PHASE-5.md|published/backend/similar-products/PHASE-6.md
         pages:
