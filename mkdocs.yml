@@ -37,8 +37,6 @@ nav:
     - Технічна документація:
       - Фаза 2C — Черги та виконання: published/backend/accessories/PHASE-2C.md
       - Фаза 2D — Автоматична перевірка: published/backend/accessories/PHASE-2D.md
-    - Інші документи:
-      - 'Аксесуари в Magento: як менеджеру створювати правила сумісності та пріоритетності': published/backend/accessories/accessories-guide_old.md
   - Схожі товари:
     - Огляд: published/backend/similar-products/index.md
     - Посібники користувача:
@@ -85,13 +83,6 @@ extra:
     - title: Аксесуари
       url: published/backend/accessories/
     - title: Фаза 2D — Автоматична перевірка
-      url: ''
-    published/backend/accessories/accessories-guide_old/:
-    - title: Головна
-      url: ''
-    - title: Аксесуари
-      url: published/backend/accessories/
-    - title: 'Аксесуари в Magento: як менеджеру створювати правила сумісності та пріоритетності'
       url: ''
     published/backend/accessories/:
     - title: Головна
@@ -176,14 +167,6 @@ extra:
           description: ''
           path: published/backend/accessories/PHASE-2D.md
           url: published/backend/accessories/PHASE-2D/
-      - title: Інші документи
-        key: Інші документи|published/backend/accessories/accessories-guide_old.md
-        pages:
-        - title: 'Аксесуари в Magento: як менеджеру створювати правила сумісності
-            та пріоритетності'
-          description: ''
-          path: published/backend/accessories/accessories-guide_old.md
-          url: published/backend/accessories/accessories-guide_old/
     - title: Схожі товари
       url: published/backend/similar-products/
       groups: &id002
