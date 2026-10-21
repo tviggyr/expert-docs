@@ -1,7 +1,7 @@
-# Аксесуари: фаза 2C
+# Аксесуари: черга ручної переіндексації
 
-Ручні повні та Rule rebuild додають DB job до черги. Magento cron отримує один job
-під Accessories lock і запускає виконання FULL, RULE або PRODUCT. Active keys
-усувають дублювання queued/running work; terminal history зберігається 90 днів,
-а stale running jobs втрачають чинність через одну годину. Automatic invalidation
-відкладено до фази 2D.
+Поточний механізм описано в розділах [38–40 основного гайда](accessories-guide.md#38-технічна-архітектура-індексу).
+
+Full Reindex, Rule Reindex і Source Category Reindex додають записи до `expert_accessory_reindex_job`; Magento cron обробляє їх під Accessories lock. Active key запобігає дублюванню queued/running робіт, а журнал зберігає стан, метрики та помилку job.
+
+Це власний механізм Expert_Accessories. Стандартний Magento indexer не є заміною Full Reindex Accessories.

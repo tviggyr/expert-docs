@@ -926,10 +926,10 @@ RU: — (Magento)
 
 ### Indexing
 
-Параметр **«Виключати товари не в наявності під час індексації»** визначає, чи потрібно виключати несалабельні товари під час побудови calculated Accessories index.
+Параметр **«Виключати товари не в наявності»** діє для всіх типів правил.
 
-- **Ні** — наявність не впливає на persistent Accessories index.
-- **Так** — товари, які Magento вважає недоступними для продажу, не потрапляють до індексу під час його перебудови.
+- **Ні** — товари не виключаються з persistent Accessories index тільки через наявність; на storefront доступні показуються перед недоступними.
+- **Так** — товари, які MSI вважає недоступними для продажу, не потрапляють до індексу під час rebuild і повторно виключаються на storefront за поточним станом MSI.
 
 Після зміни цього параметра потрібно **вручну перебудувати індекс Accessories**. Саме збереження налаштування не запускає rebuild автоматично.
 
@@ -1188,3 +1188,128 @@ RU label
 Це потрібно описати в **Пріоритетності**.
 
 Якщо ці два питання розділені правильно, правило буде передбачуваним, зрозумілим і зручним для подальшої підтримки.
+
+---
+
+## 38. Технічна архітектура індексу
+
+Цей розділ описує фактичний механізм storefront після переходу на єдину індексацію. Він є джерелом істини для розробки; попередній runtime-пошук товарів Direct Rule у `catalog_category_product` більше не використовується.
+
+### Єдина таблиця зв'язків
+
+Усі увімкнені валідні правила — як Direct Rule без умов, так і calculated Rule з умовами — матеріалізуються в `expert_accessory_product_index`.
+
+| Поле | Призначення |
+| --- | --- |
+| `product_id` | ID вихідного товару, на PDP або в кошику якого показуються рекомендації. |
+| `rule_id` | Правило, що створило зв'язок. |
+| `accessory_product_id` | ID рекомендованого товару. |
+| `preference_score` | Результат priority-умов calculated Rule; для Direct Rule дорівнює `0`. |
+| `rank` | Порядковий номер кандидата в межах пари source product + rule. |
+
+Первинний ключ не допускає повтору одного accessory у межах однієї пари source product + rule. Унікальність `(product_id, rule_id, rank)` робить порядок однозначним. Запис індексу не є підтвердженням поточної доступності товару: вона повторно перевіряється на storefront.
+
+### Побудова індексу
+
+`RuleRebuilder` спочатку читає source і target категорії, а потім відсіює неeligible товари (website, статус і visibility). Якщо увімкнено **«Виключати товари не в наявності»**, target-кандидати також відсіюються через MSI для stock поточного website. Лише після цього застосовується `index_limit`.
+
+Direct Rule не має conditions. Для кожного eligible source product rebuild бере впорядкований пул eligible target product, виключає сам source product і зберігає не більш ніж `index_limit` кандидатів. `preference_score` для цих рядків нульовий.
+
+Calculated Rule має два незалежні типи conditions:
+
+- `filter` — обов'язкова сумісність; усі такі умови утворюють AND і відсіюють target-кандидатів;
+- `priority` — оцінює вже сумісні товари. Невідповідність priority не виключає товар, а додає нуль до його `preference_score`.
+
+Якщо у calculated Rule є priority-умови, кандидати ранжуються за обчисленим preference score перед записом `rank`; без priority-умов використовується детермінований порядок ID. Це **індексний** порядок, а не runtime-сортування за наявністю.
+
+### Детермінована ротація Direct Rule
+
+Для Direct Rule базовий пул упорядковано позицією товару в target category, а потім ID товару. `RuleRebuilder` обчислює стабільний offset з `crc32(source_product_id . ':' . rule_id)` і читає кругове вікно з цього пулу до `index_limit`.
+
+Отже, два різних source product можуть отримати різні, але відтворювані набори. Ротація не виконується на PDP, не використовує `ORDER BY RAND()` і не змінює порядок при повторному перегляді за незмінних даних індексу.
+
+### Межі `index_limit` і `display_limit`
+
+`index_limit` обмежує кількість рядків, що зберігаються **для одного source product і одного rule**. `display_limit` обмежує кількість товарів, які storefront віддає **в кожній фактичній групі аксесуарів**. Значення `index_limit` не може бути меншим за `display_limit`.
+
+Ліміти застосовуються на різних етапах:
+
+```text
+eligible target candidates
+  → compatibility / preference або Direct rotation
+  → index_limit і запис до expert_accessory_product_index
+  → runtime MSI, групування, availability-first
+  → display_limit
+```
+
+Storefront не шукає додаткові товари поза індексом для заповнення ліміту. Тому, якщо частина обмеженого index-пулу стала недоступною після rebuild, при увімкненому виключенні група може містити менше ніж `display_limit` карток.
+
+## 39. Storefront: групи, порядок і наявність
+
+`AccessoryGroupProvider` визначає source categories товару, знаходить увімкнені валідні правила та їхні storefront assignment, а самі кандидати читає тільки з `expert_accessory_product_index`. Запит до `catalog_category_product` на storefront використовується для source membership, а не для runtime-пошуку всіх target товарів Direct Rule.
+
+Кандидати об'єднуються у групи target category. Порядок груп задають assignment position, або position правила, якщо assignment не перевизначає його. Усередині rule кандидати читаються за `rank ASC`, а дублікати accessory ID у групі прибираються зі збереженням першого входження. Ця логіка не змішує товари між групами.
+
+Після отримання обмеженого набору ID `ProductLoaderInterface` завантажує картки, а `AccessoryProductSalability` пакетно запитує MSI `GetStockItemsDataInterface` для SKU і stock, визначеного за поточним website. Це фактична salability, а не перевірка кількості.
+
+Значення `expert_accessories/index/exclude_out_of_stock` діє так:
+
+| Значення | Під час rebuild | Під час storefront |
+| --- | --- | --- |
+| **Так** | MSI виключає недоступні target товари до запису індексу. | Поточна MSI-перевірка повторно виключає товари, що стали недоступними після rebuild. |
+| **Ні** | Товари не відсіюються тільки через наявність. | Спочатку виводяться доступні, потім недоступні; всередині кожної підгрупи зберігається індексний порядок. |
+
+Таким чином, availability-first є **runtime**-критерієм і має перевагу над rank для поточного набору; rank, rule priority, score та category position залишаються вторинним порядком відповідної availability-підгрупи. `display_limit` застосовується після цієї перевірки й сортування.
+
+### PDP і Cart API
+
+`PdpAccessories` бере current product і викликає `AccessoryGroupProvider::getForProductId()`. Далі presentation-шар вирішує, які вкладки категорій і віртуальна вкладка «Топ» показуються; він не перераховує індекс.
+
+Cart API використовує `CartAccessoryProductsProjector` → `AccessoryTopRuntimeProvider` → той самий `AccessoryGroupProvider`. `AccessoryTopRuntimeProvider` передає його групи в `TopGroupBuilder`. Отже, джерело кандидатів, MSI-перевірка та порядок доступні/недоступні для PDP і Cart API однакові; Top є способом presentation вже сформованих груп, а не окремим runtime-джерелом Direct Rule.
+
+## 40. Переіндексація та інвалідація
+
+Accessories має власну чергу `expert_accessory_reindex_job`; її не слід замінювати стандартним `bin/magento indexer:reindex`. Адміністративні ручні дії ставлять job у цю чергу, а Magento cron обробляє їх під Accessories lock.
+
+| Механізм | Що запускає | Що перебудовується |
+| --- | --- | --- |
+| Full Reindex | Адміністративна дія Full Reindex. | Усі увімкнені валідні правила; для кожного перераховуються всі його source products. |
+| Rule Reindex | Ручна дія для правила або automatic dirty job. | Усі рядки вказаного правила; `replaceForSource` атомарно замінює рядки кожного source product, а full rule-pass чистить stale source rows. |
+| Product Reindex | Automatic dirty product job. | Поточний source product: його старі index rows очищуються, потім перебудовуються застосовні увімкнені правила його єдиної source category. Якщо category немає, source rows очищуються. |
+| Source Category Reindex | Адміністративна дія для source category. | Для кожного її правила ставиться Rule Reindex job. |
+
+Automatic invalidation не створює rebuild синхронно в межах catalog mutation. Вона записує dirty revision (`rule` або `product`), dispatcher після 60-секундного quiet period створює automatic RULE/PRODUCT job, а успішний job підтверджує тільки зафіксований revision. Active key не допускає дублювання queued/running роботи; failed automatic job відкладається на 15 хвилин. Журнал завершених job очищується за політикою менеджера черги.
+
+### Що позначає індекс dirty
+
+- semantic зміна або вимкнення правила: lifecycle правила очищує або позначає його індекс; для нового правила перший rebuild має бути ручним;
+- зміна релевантних product attributes, статусу, visibility або website eligibility: source role позначає product, target role — affected rules;
+- зміна category membership: зміна source membership позначає product; зміна target membership позначає affected rules, включно з попереднім і новим membership;
+- видалення товару: foreign key прибирає його source rows, а його попередня роль у target category позначає affected rules;
+- зміна store-0 option labels для релевантної compatibility/match умови: позначає affected rules.
+
+Зміна лише category position не створює dirty unit. Зміна MSI-надійності не ставить rebuild автоматично: при значенні «Так» потрібний ручний Full Reindex, щоб очистити persistent index, а runtime усе одно перевіряє актуальну salability перед показом.
+
+## 41. Приклади
+
+### A. Direct Rule для телевізорів
+
+Source category «Телевізори» має два товари: TV-101 і TV-102. Target category «Аксесуари для ТВ» має 50 eligible товарів, `index_limit = 20`, `display_limit = 8`. Rebuild бере category-position порядок 50 товарів і для кожного телевізора обчислює власний стабільний offset. Тому TV-101 і TV-102 можуть отримати різні 20-кандидатні вікна; кожен конкретний телевізор повторно отримує той самий порядок, доки не зміняться rule, category pool або limit. На PDP показуються перші 8 після runtime MSI-групування.
+
+### B. Calculated Rule із сумісністю
+
+Для source товару «Телевізор 55\"» filter-умови можуть вимагати відповідність VESA і допустиму діагональ кронштейна. До індексу цього source product потрапляють лише target товари, що пройшли **всі** filter-умови. Якщо є priority-умова, її score задає `rank` серед уже сумісних товарів; несумісний товар не може піднятися завдяки високому priority score.
+
+### C. Наявність, 20 кандидатів і показ 8 карток
+
+В індексі вже є 20 кандидатів, `display_limit = 8`. Якщо параметр **«Виключати товари не в наявності» = Так**, rebuild відсіює тоді недоступні товари, а storefront ще раз відсіює тих, що стали недоступними. Якщо після цього лишилося шість доступних карток, показуються шість: нові товари поза 20 рядками не шукаються.
+
+Якщо параметр = **Ні**, усі 20 можуть лишитися в індексі. Storefront ставить актуально доступні картки першими, зберігає `rank` усередині доступної й недоступної підгруп і віддає перші вісім. Недоступні заповнюють видимий ліміт лише після доступних кандидатів того самого індексного пулу.
+
+## 42. Межі поточної реалізації
+
+- Детермінована ротація Direct Rule не гарантує мінімального перетину наборів між різними PDP; вона лише дає стабільне різне стартове вікно, коли pool це дозволяє.
+- Balanced Diversification не реалізовано.
+- `index_limit` обмежує пул, з якого storefront може вибирати; runtime не компенсує це повним скануванням category.
+- Зміна MSI availability між rebuild і запитом може зменшити кількість видимих товарів, особливо коли виключення наявності увімкнене.
+- Most Viewed, Best Sellers і popularity snapshot не беруть участі в ранжуванні та не реалізовані в цьому модулі.
