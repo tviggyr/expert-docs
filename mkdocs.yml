@@ -34,20 +34,20 @@ nav:
     - Огляд: published/backend/accessories/index.md
     - Посібники користувача:
       - Керування правилами аксесуарів: published/backend/accessories/accessories-guide.md
-    - Інші документи:
-      - 'Аксесуари: черга ручної переіндексації': published/backend/accessories/PHASE-2C.md
-      - 'Аксесуари: automatic invalidation': published/backend/accessories/PHASE-2D.md
+    - Технічна документація:
+      - Фаза 2C — Черги та виконання: published/backend/accessories/PHASE-2C.md
+      - Фаза 2D — Автоматична перевірка: published/backend/accessories/PHASE-2D.md
   - Схожі товари:
     - Огляд: published/backend/similar-products/index.md
     - Посібники користувача:
       - Схожі товари: published/backend/similar-products/similar_products.md
-    - Інші документи:
-      - 'Expert Similar Products — PHASE 1: конфігурація правил': published/backend/similar-products/PHASE-1.md
-      - 'Expert Similar Products — PHASE 2: Magento Admin': published/backend/similar-products/PHASE-2.md
-      - 'Expert Similar Products — PHASE 3: відбір кандидатів і розрахунок схожості': published/backend/similar-products/PHASE-3.md
-      - PHASE 4 — постійний індекс схожих товарів: published/backend/similar-products/PHASE-4.md
-      - PHASE 5 — Runtime PDP «Схожі товари»: published/backend/similar-products/PHASE-5.md
-      - PHASE 6 — Runtime Rotation «Схожі товари»: published/backend/similar-products/PHASE-6.md
+    - Технічна документація:
+      - Фаза 1: published/backend/similar-products/PHASE-1.md
+      - Фаза 2: published/backend/similar-products/PHASE-2.md
+      - Фаза 3: published/backend/similar-products/PHASE-3.md
+      - Фаза 4: published/backend/similar-products/PHASE-4.md
+      - Фаза 5: published/backend/similar-products/PHASE-5.md
+      - Фаза 6: published/backend/similar-products/PHASE-6.md
   - Cортування товарів:
     - Огляд: published/backend/catalog/sorting/index.md
     - Посібники користувача:
@@ -79,14 +79,14 @@ extra:
       url: ''
     - title: Аксесуари
       url: published/backend/accessories/
-    - title: 'Аксесуари: черга ручної переіндексації'
+    - title: Фаза 2C — Черги та виконання
       url: ''
     published/backend/accessories/PHASE-2D/:
     - title: Головна
       url: ''
     - title: Аксесуари
       url: published/backend/accessories/
-    - title: 'Аксесуари: automatic invalidation'
+    - title: Фаза 2D — Автоматична перевірка
       url: ''
     published/backend/accessories/:
     - title: Головна
@@ -105,42 +105,42 @@ extra:
       url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: 'Expert Similar Products — PHASE 1: конфігурація правил'
+    - title: Фаза 1
       url: ''
     published/backend/similar-products/PHASE-2/:
     - title: Головна
       url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: 'Expert Similar Products — PHASE 2: Magento Admin'
+    - title: Фаза 2
       url: ''
     published/backend/similar-products/PHASE-3/:
     - title: Головна
       url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: 'Expert Similar Products — PHASE 3: відбір кандидатів і розрахунок схожості'
+    - title: Фаза 3
       url: ''
     published/backend/similar-products/PHASE-4/:
     - title: Головна
       url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: PHASE 4 — постійний індекс схожих товарів
+    - title: Фаза 4
       url: ''
     published/backend/similar-products/PHASE-5/:
     - title: Головна
       url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: PHASE 5 — Runtime PDP «Схожі товари»
+    - title: Фаза 5
       url: ''
     published/backend/similar-products/PHASE-6/:
     - title: Головна
       url: ''
     - title: Схожі товари
       url: published/backend/similar-products/
-    - title: PHASE 6 — Runtime Rotation «Схожі товари»
+    - title: Фаза 6
       url: ''
     published/backend/similar-products/:
     - title: Головна
@@ -172,14 +172,14 @@ extra:
           description: Покрокова інструкція для менеджера
           path: published/backend/accessories/accessories-guide.md
           url: published/backend/accessories/accessories-guide/
-      - title: Інші документи
-        key: Інші документи|published/backend/accessories/PHASE-2C.md|published/backend/accessories/PHASE-2D.md
+      - title: Технічна документація
+        key: Технічна документація|published/backend/accessories/PHASE-2C.md|published/backend/accessories/PHASE-2D.md
         pages:
-        - title: 'Аксесуари: черга ручної переіндексації'
+        - title: Фаза 2C — Черги та виконання
           description: ''
           path: published/backend/accessories/PHASE-2C.md
           url: published/backend/accessories/PHASE-2C/
-        - title: 'Аксесуари: automatic invalidation'
+        - title: Фаза 2D — Автоматична перевірка
           description: ''
           path: published/backend/accessories/PHASE-2D.md
           url: published/backend/accessories/PHASE-2D/
@@ -193,31 +193,30 @@ extra:
           description: Покрокова інструкція для менеджера
           path: published/backend/similar-products/similar_products.md
           url: published/backend/similar-products/similar_products/
-      - title: Інші документи
-        key: Інші документи|published/backend/similar-products/PHASE-1.md|published/backend/similar-products/PHASE-2.md|published/backend/similar-products/PHASE-3.md|published/backend/similar-products/PHASE-4.md|published/backend/similar-products/PHASE-5.md|published/backend/similar-products/PHASE-6.md
+      - title: Технічна документація
+        key: Технічна документація|published/backend/similar-products/PHASE-1.md|published/backend/similar-products/PHASE-2.md|published/backend/similar-products/PHASE-3.md|published/backend/similar-products/PHASE-4.md|published/backend/similar-products/PHASE-5.md|published/backend/similar-products/PHASE-6.md
         pages:
-        - title: 'Expert Similar Products — PHASE 1: конфігурація правил'
+        - title: Фаза 1
           description: ''
           path: published/backend/similar-products/PHASE-1.md
           url: published/backend/similar-products/PHASE-1/
-        - title: 'Expert Similar Products — PHASE 2: Magento Admin'
+        - title: Фаза 2
           description: ''
           path: published/backend/similar-products/PHASE-2.md
           url: published/backend/similar-products/PHASE-2/
-        - title: 'Expert Similar Products — PHASE 3: відбір кандидатів і розрахунок
-            схожості'
+        - title: Фаза 3
           description: ''
           path: published/backend/similar-products/PHASE-3.md
           url: published/backend/similar-products/PHASE-3/
-        - title: PHASE 4 — постійний індекс схожих товарів
+        - title: Фаза 4
           description: ''
           path: published/backend/similar-products/PHASE-4.md
           url: published/backend/similar-products/PHASE-4/
-        - title: PHASE 5 — Runtime PDP «Схожі товари»
+        - title: Фаза 5
           description: ''
           path: published/backend/similar-products/PHASE-5.md
           url: published/backend/similar-products/PHASE-5/
-        - title: PHASE 6 — Runtime Rotation «Схожі товари»
+        - title: Фаза 6
           description: ''
           path: published/backend/similar-products/PHASE-6.md
           url: published/backend/similar-products/PHASE-6/
