@@ -48,6 +48,10 @@ nav:
       - Фаза 4: published/backend/similar-products/PHASE-4.md
       - Фаза 5: published/backend/similar-products/PHASE-5.md
       - Фаза 6: published/backend/similar-products/PHASE-6.md
+  - Cортування товарів:
+    - Огляд: published/backend/catalog/sorting/index.md
+    - Посібники користувача:
+      - Сортування товарів: published/backend/catalog/sorting/Sorting.md
 extra_css:
 - assets/portal.css
 extra_javascript:
@@ -143,6 +147,18 @@ extra:
       url: ''
     - title: Схожі товари
       url: ''
+    published/backend/catalog/sorting/Sorting/:
+    - title: Головна
+      url: ''
+    - title: Cортування товарів
+      url: published/backend/catalog/sorting/
+    - title: Сортування товарів
+      url: ''
+    published/backend/catalog/sorting/:
+    - title: Головна
+      url: ''
+    - title: Cортування товарів
+      url: ''
   portal_tree:
   - title: Модулі Magento
     modules:
@@ -204,6 +220,16 @@ extra:
           description: ''
           path: published/backend/similar-products/PHASE-6.md
           url: published/backend/similar-products/PHASE-6/
+    - title: Cортування товарів
+      url: published/backend/catalog/sorting/
+      groups: &id003
+      - title: Посібники користувача
+        key: Посібники користувача|published/backend/catalog/sorting/Sorting.md
+        pages:
+        - title: Сортування товарів
+          description: Покрокове налаштування сортування каталогу та пошуку
+          path: published/backend/catalog/sorting/Sorting.md
+          url: published/backend/catalog/sorting/Sorting/
   portal_catalogs:
     published/backend/accessories/:
       section: Модулі Magento
@@ -216,4 +242,10 @@ extra:
       title: Схожі товари
       description: Налаштування автоматичного підбору товарів
       groups: *id002
+      has_source_index: false
+    published/backend/catalog/sorting/:
+      section: Модулі Magento
+      title: Cортування товарів
+      description: Налаштування каталогу та сортування товарів
+      groups: *id003
       has_source_index: false
