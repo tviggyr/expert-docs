@@ -1222,15 +1222,62 @@ Calculated Rule має два незалежні типи conditions:
 
 Якщо у calculated Rule є priority-умови, кандидати ранжуються за обчисленим preference score перед записом `rank`; без priority-умов використовується детермінований порядок ID. Це **індексний** порядок, а не runtime-сортування за наявністю.
 
-### Детермінована ротація Direct Rule
+### Детермінована ротація товарів (Deterministic Rotation)
 
 Для Direct Rule базовий пул упорядковано позицією товару в target category, а потім ID товару. `RuleRebuilder` обчислює стабільний offset з `crc32(source_product_id . ':' . rule_id)` і читає кругове вікно з цього пулу до `index_limit`.
 
 Отже, два різних source product можуть отримати різні, але відтворювані набори. Ротація не виконується на PDP, не використовує `ORDER BY RAND()` і не змінює порядок при повторному перегляді за незмінних даних індексу.
 
+Це практичне застосування патерна Deterministic Rotation — детермінованої
+ротації: він дає різним вихідним товарам різні стартові
+вікна у спільному пулі, але зберігає однакову підбірку для того самого товару
+та правила, доки індекс не зміниться. Ротація не застосовується до calculated
+Rule: у ньому порядок кандидатів визначають умови сумісності та, за наявності,
+пріоритети. У Direct Rule пріоритетів немає, тому всі його індексні рядки мають
+нульовий `preference_score`.
+
+До ротації потрапляють лише eligible кандидати; за увімкненого виключення
+недоступних товарів це також враховує наявність під час rebuild. `index_limit`
+обмежує розмір збереженого кругового вікна, а поточна наявність і
+`display_limit` застосовуються на storefront пізніше. Оскільки вибір уже
+матеріалізований в індексі та не змінюється від повторного запиту, результат
+передбачуваний і придатний для кешування до зміни відповідних даних індексу.
+
 ### Межі `index_limit` і `display_limit`
 
 `index_limit` обмежує кількість рядків, що зберігаються **для одного source product і одного rule**. `display_limit` обмежує кількість товарів, які storefront віддає **в кожній фактичній групі аксесуарів**. Значення `index_limit` не може бути меншим за `display_limit`.
+
+### Індексне сортування аксесуарів: перший етап
+
+Підготовлено окрему інфраструктуру для майбутнього трирівневого порядку **«Спочатку сортувати за → Потім за → Потім за»**. Вона не змінює поточну видачу: global flag `expert_accessories/sorting/enabled` за замовчуванням вимкнено, а `AccessoryGroupProvider`, rule index і storefront поки не читають новий індекс.
+
+Налаштування належить основній source category і зберігається в `expert_accessory_source_category_sorting`. Відсутність рядка означає, що категорія не налаштована. Допускаються тільки стабільні коди критеріїв: `best_sellers`, `most_viewed`, `newest`, `biggest_saving`, `price_asc`, `price_desc`, `rating`, `category_position`. Перший критерій обов’язковий; третій можливий лише разом із другим; дублікати заборонені.
+
+Майбутній projection builder записуватиме готовий порядок у `expert_accessory_product_sort_index`. Його scope — source product, source category і target category; `final_rank` унікальний у цьому scope. Rule index зберігає кандидатів у межах правила, а sort index призначений лише для матеріалізованого підсумкового порядку після об’єднання та дедуплікації. На цьому етапі projection builder і metric providers ще не реалізовані.
+
+Сортування використовуватиме один спільний **Primary Context**: default Store View, заданий для default Website Magento, його Website і customer group **NOT LOGGED IN**. Це збігається з контекстом цін публічного каталогу для гостя. Resolver не використовує поточну Store View покупця, `customer/create_account/default_group` або випадковий fallback: якщо default store чи guest group некоректні, він завершується діагностичною помилкою. Для всіх Store Views використовується один materialized index; store-specific і customer-group-specific ranking навмисно не підтримуються.
+
+`SortProjectionBuilder` читає вже записані rule candidates, зберігає перший origin за порядком `rule.position`, `rule_id`, `rank`, дедуплікує товари всередині target category і сортує весь отриманий пул за трьома налаштованими критеріями. За повної рівності застосовується `accessory_product_id`. `final_rank` починається з 1 у кожній target category. Projection не запускає compatibility, preference scoring або Deterministic Rotation повторно.
+
+Метрики завантажуються пакетно: Best Sellers і Most Viewed — сумою відповідних Amasty rows Store Views Primary Website; Newest — configured Amasty EAV attribute; Price і Biggest Saving — з `catalog_product_index_price` Primary Website та guest group (saving є `price - LEAST(min_price, tier_price)`); Rating — `review_entity_summary` тільки default Store View; Category Position — `catalog_category_product.position` target category. Семантика Newest відповідає Amasty Improved Sorting: порожній `amsorting/new/new_attr` використовує `catalog_product_entity.created_at`; явно заданий attribute використовується тільки сам. Якщо явно заданий attribute відсутній, має непідтримуваний backend type або його SQL неможливо прочитати, метрика повертає `NULL` і не переходить на `created_at`. Відсутні значення розміщуються після наявних, а projection досі не підключений до storefront.
+
+Під час rebuild builder бере об’єднання актуальних target categories і вже записаних scopes цього source product/source category. Тому вимкнене або видалене правило, змінена target category, порожній rule index чи видалена sorting configuration очищають лише застарілі рядки відповідного source-category scope. Інші source categories того самого товару не змінюються.
+
+Global feature flag не очищає projection: він лише зупиняє її побудову. Це зберігає останній готовий індекс для безпечного повторного ввімкнення. Перед майбутнім підключенням storefront потрібний окремий ready/stale lifecycle: за відсутнього або частково перебудованого projection storefront має залишатися на legacy ordering.
+
+Unit tests перевіряють порядок First/Then/Then, ASC, NULLS LAST і tie-breaker; Primary Context; config whitelist; transactional replace та rollback writer; continuation і counters projection rebuilder. SQL semantics metric loader, database constraints і rollback на реальній Magento integration database ще не виконувалися: вони потребують окремої ізольованої test DB, підготовка якої не запускається без явного дозволу на destructive reinstall.
+
+Також unit tests перевіряють grouping, deduplication і збереження першого rule origin у межах target category. Builder готує всі target-category rows до початку запису, а writer атомарно замінює весь scope `source_product_id + source_category_id` однією транзакцією: delete старих рядків, batch insert нового набору, commit. Помилка insert викликає rollback усієї пари. MySQL advisory lock з ключем цієї пари серіалізує паралельні rebuild того самого scope, не блокуючи інші товари або source categories.
+
+Projection lifecycle зберігається в `expert_accessory_product_sort_state`: `ready` після успішного commit, `failed` після помилки із збереженням останнього успішного часу та короткого повідомлення. Порожній projection також може бути `ready`. CLI: `expert:accessories:sort:reindex --product-id=123`, `--category-id=45` або `--all`; потрібно вибрати рівно один режим. Вимкнений feature flag завершує команду без запису.
+
+Майбутня автоматизація має ставити projection scope `stale` після успішної зміни rule index, а не запускати projection під час кожного observer. Точки інтеграції для targeted queue: `RuleRebuilder::rebuild`/`rebuildProduct` після успішного запису rule candidates; `AccessoryRuleManagement` і `RuleAttributeIntegrity` для створення, зміни, вимкнення або видалення правила; існуючі `DirtyReindexProcessor` та `ReindexJobExecutor` після успішного rule/product job. Зміни Amasty sales/views, price index, rating і category position також мають позначати лише affected projection scopes stale у майбутньому; цей механізм у поточному етапі навмисно не реалізований.
+
+Поточна інтеграція виконується в `ReindexJobExecutor` після успішного rule-index rebuild. Для full job source category projection перебудовується один раз після всіх її rules; для rule job — один раз після цього rule; для product job — один раз після всіх правил товару.
+
+Якщо projection завершується помилкою, rule index не відкочується. Для товару створюється dirty marker scope `projection`; `DirtyReindexProcessor` після наявного quiet period створює окремий automatic projection job. Цей job викликає тільки `SortProjectionRebuilder`, не запускає `RuleRebuilder`, і підтверджує marker лише після успіху. Existing 15-хвилинний backoff failed automatic jobs застосовується й до цього scope, тому немає нескінченних негайних повторів. Попередні projection rows залишаються, а lifecycle state зберігає `failed`.
+
+Product і projection-only jobs розглядають лише категорії, зареєстровані в `expert_accessory_source_category`; звичайні Magento category memberships не можуть створити projection scope або lifecycle row. Якщо товар втратив source category, cleanup порівнює його актуальні зареєстровані source categories з scopes у sort index/lifecycle state і очищає тільки застарілі scope цього товару. Товар лише зі звичайними categories очищує всі свої застарілі projection scopes. Це виконується тільки за увімкненого sorting feature flag і не зачіпає інші товари або категорії. CLI `--product-id` використовує той самий filter, а `--category-id` приймає лише зареєстровану source category. Feature flag вимикає projection rebuild та cleanup без видалення останнього projection.
 
 Ліміти застосовуються на різних етапах:
 
@@ -1243,6 +1290,17 @@ eligible target candidates
 ```
 
 Storefront не шукає додаткові товари поза індексом для заповнення ліміту. Тому, якщо частина обмеженого index-пулу стала недоступною після rebuild, при увімкненому виключенні група може містити менше ніж `display_limit` карток.
+
+
+### Storefront і materialized projection
+
+Єдина точка застосування готового `final_rank` — `AccessoryGroupProvider`, тому PDP, Cart і Add-to-Cart Modal отримують однаковий порядок через спільний backend pipeline. Provider спочатку формує **legacy** кандидатів з актуального rule index та застосовних правил. Лише потім `SortProjectionStorefrontOrderer` переставляє вже наявні ID всередині кожної target category.
+
+Projection використовується лише коли global sorting flag увімкнено і lifecycle state вибраної пари має `ready`. Якщо товар належить кільком source categories, `SourceCategoryProjectionSelector` розглядає тільки категорії, правила яких фактично беруть участь у поточній підбірці. Він одним batch-запитом читає їх `level`, обирає найбільшу глибину, а за рівності — найменший `category_id`. Отже, результат не залежить від порядку SQL, URL, session, PDP, Cart або Modal. Вибрана категорія використовується тільки як scope готового порядку; вона не прибирає rules і candidates інших source categories.
+
+Перевірка readiness не покладається на наявність sort-index rows: порожній `ready` projection припустимий. Для batch набору товарів selector, state і ranks виконують по одному пакетному запиту; storefront не читає метрики, не отримує lock та не запускає rebuild.
+
+Якщо вибраної source category немає, state відсутній або `failed`, sort index не має рангу для кандидата чи читання projection неможливе, provider зберігає legacy порядок. Він не переходить довільно на іншу source category. Projection ніколи не додає товарів поза поточним rule candidate set: ranked ID ідуть першими за `final_rank`, а актуальні, але неранжовані candidates залишаються наприкінці у legacy-порядку. Projection ніколи не додає товарів поза поточним rule candidate set: ranked ID ідуть першими за `final_rank`, а актуальні, але неранжовані candidates залишаються наприкінці у legacy-порядку. Після цього без змін діють MSI availability, category `display_limit`, порядок груп і `TopGroupBuilder` round-robin. Отже, ranks різних target categories не змішуються: для груп `A,B,C` і `D,E,F` Top лишається `A,D,B,E,C,F`.
 
 ## 39. Storefront: групи, порядок і наявність
 
@@ -1313,3 +1371,13 @@ Source category «Телевізори» має два товари: TV-101 і T
 - `index_limit` обмежує пул, з якого storefront може вибирати; runtime не компенсує це повним скануванням category.
 - Зміна MSI availability між rebuild і запитом може зменшити кількість видимих товарів, особливо коли виключення наявності увімкнене.
 - Most Viewed, Best Sellers і popularity snapshot не беруть участі в ранжуванні та не реалізовані в цьому модулі.
+
+### Rolling batch automatic rebuild
+
+Automatic dirty processing використовує rolling batches. Після 60 секунд без нового `marked_at` dispatcher створює один automatic job scope `batch` для одного dirty scope (`product`, `rule` або `projection`) і зберігає immutable item snapshots у `expert_accessory_reindex_job_item`. Snapshot містить `scope`, `entity_id` і `dirty_revision`; dirty marker не видаляється в момент dispatch.
+
+Для product batch початковий ліміт становить 50 товарів. `ReindexJobExecutor::rebuildProducts()` групує товари за зареєстрованою source category та rule. Для групи одного rule він один раз завантажує target pool, EAV target values, option labels і compatibility/preference lookup, потім пакетно завантажує source values та атомарно замінює candidate rows через `replaceForSources()`. Deterministic Rotation усе ще використовує окремий stable seed кожної пари source product/rule.
+
+Після item success acknowledge видаляє dirty marker лише за збігу snapshot revision. Якщо товар змінився під час batch, marker отримує нову revision і зберігається для наступного batch. Помилка item не відкочує успішні items, а зберігає marker для retry після поточного 15-хвилинного backoff. Legacy manual і queued single jobs залишаються сумісними; dispatcher не включає marker, який уже має active legacy job.
+
+Batch job показується в журналі як «Пакет», а його metrics містять кількість items, success, errors, candidate rows і projection rows. Projection зберігає існуючу atomic boundary однієї пари `source_product_id + source_category_id`; feature flag, storefront fallback, MSI та `display_limit` не змінюються.

@@ -40,7 +40,7 @@ source/candidate немає. Для кожного source заміна інде�
 коротка транзакція видаляє його старі рядки та пакетно вставляє нові.
 
 Формула `base_score` і порядок TOP 30 визначені у
-[PHASE-3.md](PHASE-3.md#як-формується-пріоритет-схожих-товарів). PHASE 4 лише
+[PHASE-3.md](PHASE-3.md#_5). PHASE 4 лише
 зберігає цей базовий результат; salable-first, rotation і display limit є
 runtime boundary з PHASE 6.
 

@@ -84,7 +84,7 @@ Admin показує для них українські labels.
 | Перетин значень | `intersection` | лише для `multiselect` |
 
 Докладний опис `exact`, `proximity`, `intersection`, допуску та формули score
-наведено в [PHASE-3.md](PHASE-3.md#як-формується-пріоритет-схожих-товарів).
+наведено в [PHASE-3.md](PHASE-3.md#_5).
 Той самий `AttributeEligibility` визначає доступні comparator для Admin і REST API.
 
 ## REST API

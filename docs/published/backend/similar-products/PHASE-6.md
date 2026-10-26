@@ -3,7 +3,7 @@
 Rotation змінює runtime presentation уже побудованого списку Similar Products.
 Вона не перераховує similarity та не змінює persistent index.
 
-Базовий score і TOP 30 формує [PHASE-3.md](PHASE-3.md#як-формується-пріоритет-схожих-товарів);
+Базовий score і TOP 30 формує [PHASE-3.md](PHASE-3.md#_5);
 ця фаза додає лише runtime salable-first, rotation і `LIMIT 8`.
 
 ## Межа persistent index

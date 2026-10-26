@@ -1,6 +1,6 @@
 # Аксесуари: automatic invalidation
 
-Поточний контракт індексації описано в [розділах 38–40 основного гайда](accessories-guide.md#38-технічна-архітектура-індексу). Цей документ фіксує призначення dirty pipeline.
+Поточний контракт індексації описано в [розділах 38–40 основного гайда](accessories-guide.md#38). Цей документ фіксує призначення dirty pipeline.
 
 Catalog mutation не запускає важку перебудову синхронно. Інвалідація позначає dirty unit `rule` або `product` в `expert_accessory_reindex_dirty` і збільшує його revision. Після 60-секундного quiet period dispatcher створює automatic RULE або PRODUCT job із зафіксованим revision. Successful job підтверджує dirty state тільки коли revision не змінився; пізніша mutation залишає dirty row для наступного job. Failed automatic job повторюється не раніше ніж через 15 хвилин.
 
