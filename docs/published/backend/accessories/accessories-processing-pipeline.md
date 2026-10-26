@@ -8,12 +8,20 @@
 ```mermaid
 flowchart TB
     A["**1. Категорії та правила**<br/>Основний товар → категорії аксесуарів"]
-    B{"**2. Як відібрати кандидатів?**"}
+    B{"**2. Відбір кандидатів**"}
     D["**Direct Rule**<br/>Детермінована ротація"]
     C["**Calculated Rule**<br/>Сумісність AND → пріоритет"]
     I[("**3. Індекс кандидатів**<br/>expert_accessory_product_index")]
-    P[("**4. Індекс сортування**<br/>expert_accessory_product_sort_index<br/>опційно: enabled + ready")]
-    S["**5. Вітрина**<br/>Готовий порядок / fallback<br/>→ MSI → ліміти → групи"]
+
+    R["**4. Багатокритеріальне сортування**<br/>Налаштування для категорії аксесуарів"]
+
+    K1["**Критерій 1 — основний**<br/>Наприклад: продажі ↓"]
+    K2["**Критерій 2 — додатковий**<br/>Наприклад: перегляди ↓"]
+    K3["**Критерій 3 — додатковий**<br/>Наприклад: ціна ↑"]
+
+    P[("**5. Індекс сортування**<br/>expert_accessory_product_sort_index<br/>Збереження final_rank")]
+
+    S["**6. Вітрина**<br/>Готовий порядок / fallback<br/>→ MSI → ліміти → групи"]
     O["**PDP · Кошик · Add-to-Cart Modal**"]
 
     A --> B
@@ -21,20 +29,35 @@ flowchart TB
     B -->|З умовами| C
     D -->|index_limit| I
     C -->|index_limit| I
-    I -.->|Окрема побудова projection| P
-    I -->|Legacy candidates| S
-    P -.->|final_rank, якщо готовий| S
+
+    I --> R
+    R --> K1
+    K1 --> K2
+    K2 --> K3
+    K3 --> P
+
+    P -->|enabled + ready| S
+    I -.->|Legacy fallback| S
     S --> O
 
     classDef input fill:#f4f1ff,stroke:#9b85db,color:#30245b
     classDef logic fill:#f8f9fc,stroke:#c5ccdb,color:#242c40
     classDef index fill:#e6f4ee,stroke:#82b5a0,color:#174d3d
     classDef runtime fill:#e9f1ff,stroke:#82a8e6,color:#173c70
+    classDef criterion fill:#fff8e8,stroke:#d8b96d,color:#604b1e
+
     class A input
-    class B,C,D logic
+    class B,C,D,R logic
     class I,P index
+    class K1,K2,K3 criterion
     class S,O runtime
 ```
+
+
+
+
+
+
 
 > Якщо Mermaid не підтримується у переглядачі Markdown, короткий порядок: **правила → відбір → індекс кандидатів → [опційний індекс сортування] → MSI та групування → вітрина**.
 
