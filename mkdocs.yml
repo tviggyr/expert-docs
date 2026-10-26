@@ -27,6 +27,12 @@ theme:
       name: Увімкнути світлу тему
 plugins:
 - search
+markdown_extensions:
+- pymdownx.superfences:
+    custom_fences:
+    - name: mermaid
+      class: mermaid
+      format: !!python/name:pymdownx.superfences.fence_code_format
 nav:
 - Головна: index.md
 - Модулі Magento:
@@ -57,6 +63,8 @@ nav:
 extra_css:
 - assets/portal.css
 extra_javascript:
+- https://unpkg.com/mermaid@11.12.2/dist/mermaid.min.js
+- assets/mermaid.js
 - assets/portal.js
 extra:
   portal_sections:
