@@ -7,47 +7,52 @@
 
 ```mermaid
 flowchart TB
-    A["**1. Категорії та правила**<br/>Основний товар → категорії аксесуарів"]
-    B{"**2. Відбір кандидатів**"}
-    D["**Direct Rule**<br/>Детермінована ротація"]
-    C["**Calculated Rule**<br/>Сумісність AND → пріоритет"]
-    I[("**3. Індекс кандидатів**<br/>expert_accessory_product_index")]
+    A["1. Категорії та правила<br/>Основний товар → категорії аксесуарів"]
+    B{"2. Відбір кандидатів"}
 
-    R["**4. Багатокритеріальне сортування**<br/>Налаштування для категорії аксесуарів"]
+    D["Direct Rule<br/>Правила без умов"]
+    R["Deterministic Rotation<br/>Циклічне зміщення кандидатів<br/>source_product_id + rule_id"]
+    DL["Вибірка після ротації<br/>index_limit кандидатів"]
 
-    K1["**Критерій 1 — основний**<br/>Наприклад: продажі ↓"]
-    K2["**Критерій 2 — додатковий**<br/>Наприклад: перегляди ↓"]
-    K3["**Критерій 3 — додатковий**<br/>Наприклад: ціна ↑"]
+    C["Calculated Rule<br/>Умови сумісності AND"]
+    CP["Відбір за сумісністю<br/>та пріоритетами"]
+    CL["Обмеження вибірки<br/>index_limit"]
 
-    P[("**5. Індекс сортування**<br/>expert_accessory_product_sort_index<br/>Збереження final_rank")]
+    I[("3. Індекс кандидатів<br/>expert_accessory_product_index")]
 
-    S["**6. Вітрина**<br/>Готовий порядок / fallback<br/>→ MSI → ліміти → групи"]
-    O["**PDP · Кошик · Add-to-Cart Modal**"]
+    M["4. Багатокритеріальне сортування<br/>До трьох критеріїв"]
+    K1["Критерій 1 — продажі ↓"]
+    K2["Критерій 2 — перегляди ↓"]
+    K3["Критерій 3 — ціна ↑"]
+
+    P[("5. Індекс сортування<br/>expert_accessory_product_sort_index<br/>final_rank")]
+
+    S["6. Вітрина<br/>Готовий порядок / fallback<br/>MSI → ліміти → групування"]
+    O["PDP · Кошик · Add-to-Cart Modal"]
 
     A --> B
     B -->|Без умов| D
     B -->|З умовами| C
-    D -->|index_limit| I
-    C -->|index_limit| I
 
-    I --> R
-    R --> K1
-    K1 --> K2
-    K2 --> K3
-    K3 --> P
+    D --> R --> DL --> I
+    C --> CP --> CL --> I
 
+    I --> M
+    M --> K1 --> K2 --> K3 --> P
     P -->|enabled + ready| S
     I -.->|Legacy fallback| S
     S --> O
 
     classDef input fill:#f4f1ff,stroke:#9b85db,color:#30245b
     classDef logic fill:#f8f9fc,stroke:#c5ccdb,color:#242c40
+    classDef rotation fill:#fff3d6,stroke:#d6a34b,color:#634713
     classDef index fill:#e6f4ee,stroke:#82b5a0,color:#174d3d
-    classDef runtime fill:#e9f1ff,stroke:#82a8e6,color:#173c70
     classDef criterion fill:#fff8e8,stroke:#d8b96d,color:#604b1e
+    classDef runtime fill:#e9f1ff,stroke:#82a8e6,color:#173c70
 
     class A input
-    class B,C,D,R logic
+    class B,D,DL,C,CP,CL,M logic
+    class R rotation
     class I,P index
     class K1,K2,K3 criterion
     class S,O runtime

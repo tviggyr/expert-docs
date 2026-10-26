@@ -42,9 +42,6 @@ nav:
       - Керування правилами аксесуарів: published/backend/accessories/accessories-guide.md
     - Технічна документація:
       - Архітектура обробки аксесуарів: published/backend/accessories/accessories-processing-pipeline.md
-    - Інші документи:
-      - 'Аксесуари: черга ручної переіндексації': published/backend/accessories/PHASE-2C.md
-      - 'Аксесуари: automatic invalidation': published/backend/accessories/PHASE-2D.md
   - Схожі товари:
     - Огляд: published/backend/similar-products/index.md
     - Посібники користувача:
@@ -59,7 +56,7 @@ nav:
   - Cортування товарів:
     - Огляд: published/backend/catalog/sorting/index.md
     - Посібники користувача:
-      - Сортування товарів: published/backend/catalog/sorting/Sorting.md
+      - Сортування каталогу товарів: published/backend/catalog/sorting/Sorting.md
 extra_css:
 - assets/portal.css
 extra_javascript:
@@ -90,20 +87,6 @@ extra:
     - title: Аксесуари
       url: published/backend/accessories/
     - title: Архітектура обробки аксесуарів
-      url: ''
-    published/backend/accessories/PHASE-2C/:
-    - title: Головна
-      url: ''
-    - title: Аксесуари
-      url: published/backend/accessories/
-    - title: 'Аксесуари: черга ручної переіндексації'
-      url: ''
-    published/backend/accessories/PHASE-2D/:
-    - title: Головна
-      url: ''
-    - title: Аксесуари
-      url: published/backend/accessories/
-    - title: 'Аксесуари: automatic invalidation'
       url: ''
     published/backend/accessories/:
     - title: Головна
@@ -169,7 +152,7 @@ extra:
       url: ''
     - title: Cортування товарів
       url: published/backend/catalog/sorting/
-    - title: Сортування товарів
+    - title: Сортування каталогу товарів
       url: ''
     published/backend/catalog/sorting/:
     - title: Головна
@@ -196,17 +179,6 @@ extra:
           description: ''
           path: published/backend/accessories/accessories-processing-pipeline.md
           url: published/backend/accessories/accessories-processing-pipeline/
-      - title: Інші документи
-        key: Інші документи|published/backend/accessories/PHASE-2C.md|published/backend/accessories/PHASE-2D.md
-        pages:
-        - title: 'Аксесуари: черга ручної переіндексації'
-          description: ''
-          path: published/backend/accessories/PHASE-2C.md
-          url: published/backend/accessories/PHASE-2C/
-        - title: 'Аксесуари: automatic invalidation'
-          description: ''
-          path: published/backend/accessories/PHASE-2D.md
-          url: published/backend/accessories/PHASE-2D/
     - title: Схожі товари
       url: published/backend/similar-products/
       groups: &id002
@@ -250,7 +222,7 @@ extra:
       - title: Посібники користувача
         key: Посібники користувача|published/backend/catalog/sorting/Sorting.md
         pages:
-        - title: Сортування товарів
+        - title: Сортування каталогу товарів
           description: Покрокове налаштування сортування каталогу та пошуку
           path: published/backend/catalog/sorting/Sorting.md
           url: published/backend/catalog/sorting/Sorting/
