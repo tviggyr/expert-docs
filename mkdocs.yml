@@ -35,8 +35,10 @@ nav:
     - Посібники користувача:
       - Керування правилами аксесуарів: published/backend/accessories/accessories-guide.md
     - Технічна документація:
-      - Фаза 2C — Черги та виконання: published/backend/accessories/PHASE-2C.md
-      - Фаза 2D — Автоматична перевірка: published/backend/accessories/PHASE-2D.md
+      - Архітектура обробки аксесуарів: published/backend/accessories/accessories-processing-pipeline.md
+    - Інші документи:
+      - 'Аксесуари: черга ручної переіндексації': published/backend/accessories/PHASE-2C.md
+      - 'Аксесуари: automatic invalidation': published/backend/accessories/PHASE-2D.md
   - Схожі товари:
     - Огляд: published/backend/similar-products/index.md
     - Посібники користувача:
@@ -74,19 +76,26 @@ extra:
       url: published/backend/accessories/
     - title: Керування правилами аксесуарів
       url: ''
+    published/backend/accessories/accessories-processing-pipeline/:
+    - title: Головна
+      url: ''
+    - title: Аксесуари
+      url: published/backend/accessories/
+    - title: Архітектура обробки аксесуарів
+      url: ''
     published/backend/accessories/PHASE-2C/:
     - title: Головна
       url: ''
     - title: Аксесуари
       url: published/backend/accessories/
-    - title: Фаза 2C — Черги та виконання
+    - title: 'Аксесуари: черга ручної переіндексації'
       url: ''
     published/backend/accessories/PHASE-2D/:
     - title: Головна
       url: ''
     - title: Аксесуари
       url: published/backend/accessories/
-    - title: Фаза 2D — Автоматична перевірка
+    - title: 'Аксесуари: automatic invalidation'
       url: ''
     published/backend/accessories/:
     - title: Головна
@@ -173,13 +182,20 @@ extra:
           path: published/backend/accessories/accessories-guide.md
           url: published/backend/accessories/accessories-guide/
       - title: Технічна документація
-        key: Технічна документація|published/backend/accessories/PHASE-2C.md|published/backend/accessories/PHASE-2D.md
+        key: Технічна документація|published/backend/accessories/accessories-processing-pipeline.md
         pages:
-        - title: Фаза 2C — Черги та виконання
+        - title: Архітектура обробки аксесуарів
+          description: ''
+          path: published/backend/accessories/accessories-processing-pipeline.md
+          url: published/backend/accessories/accessories-processing-pipeline/
+      - title: Інші документи
+        key: Інші документи|published/backend/accessories/PHASE-2C.md|published/backend/accessories/PHASE-2D.md
+        pages:
+        - title: 'Аксесуари: черга ручної переіндексації'
           description: ''
           path: published/backend/accessories/PHASE-2C.md
           url: published/backend/accessories/PHASE-2C/
-        - title: Фаза 2D — Автоматична перевірка
+        - title: 'Аксесуари: automatic invalidation'
           description: ''
           path: published/backend/accessories/PHASE-2D.md
           url: published/backend/accessories/PHASE-2D/
