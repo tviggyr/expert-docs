@@ -4,7 +4,20 @@
   window.mermaid.initialize({ startOnLoad: false });
 
   function renderMermaid() {
-    window.mermaid.run({ querySelector: '.mermaid' });
+    const diagrams = Array.from(
+      document.querySelectorAll('.mermaid:not([data-processed])')
+    );
+
+    diagrams.forEach((diagram) => {
+      const code = diagram.querySelector(':scope > code');
+      if (code) {
+        diagram.textContent = code.textContent;
+      }
+    });
+
+    if (diagrams.length) {
+      window.mermaid.run({ nodes: diagrams });
+    }
   }
 
   if (typeof document$ !== 'undefined') {
