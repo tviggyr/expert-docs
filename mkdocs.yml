@@ -40,19 +40,10 @@ nav:
     - Огляд: published/backend/accessories/index.md
     - Посібники користувача:
       - Керування правилами аксесуарів: published/backend/accessories/accessories-guide-with-flow.md
-    - Технічна документація:
-      - Архітектура обробки аксесуарів: published/backend/accessories/accessories-processing-pipeline.md
   - Схожі товари:
     - Огляд: published/backend/similar-products/index.md
     - Посібники користувача:
       - Схожі товари: published/backend/similar-products/similar_products.md
-    - Технічна документація:
-      - Фаза 1: published/backend/similar-products/PHASE-1.md
-      - Фаза 2: published/backend/similar-products/PHASE-2.md
-      - Фаза 3: published/backend/similar-products/PHASE-3.md
-      - Фаза 4: published/backend/similar-products/PHASE-4.md
-      - Фаза 5: published/backend/similar-products/PHASE-5.md
-      - Фаза 6: published/backend/similar-products/PHASE-6.md
   - Cортування товарів:
     - Огляд: published/backend/catalog/sorting/index.md
     - Посібники користувача:
@@ -81,13 +72,6 @@ extra:
       url: published/backend/accessories/
     - title: Керування правилами аксесуарів
       url: ''
-    published/backend/accessories/accessories-processing-pipeline/:
-    - title: Головна
-      url: ''
-    - title: Аксесуари
-      url: published/backend/accessories/
-    - title: Архітектура обробки аксесуарів
-      url: ''
     published/backend/accessories/:
     - title: Головна
       url: ''
@@ -99,48 +83,6 @@ extra:
     - title: Схожі товари
       url: published/backend/similar-products/
     - title: Схожі товари
-      url: ''
-    published/backend/similar-products/PHASE-1/:
-    - title: Головна
-      url: ''
-    - title: Схожі товари
-      url: published/backend/similar-products/
-    - title: Фаза 1
-      url: ''
-    published/backend/similar-products/PHASE-2/:
-    - title: Головна
-      url: ''
-    - title: Схожі товари
-      url: published/backend/similar-products/
-    - title: Фаза 2
-      url: ''
-    published/backend/similar-products/PHASE-3/:
-    - title: Головна
-      url: ''
-    - title: Схожі товари
-      url: published/backend/similar-products/
-    - title: Фаза 3
-      url: ''
-    published/backend/similar-products/PHASE-4/:
-    - title: Головна
-      url: ''
-    - title: Схожі товари
-      url: published/backend/similar-products/
-    - title: Фаза 4
-      url: ''
-    published/backend/similar-products/PHASE-5/:
-    - title: Головна
-      url: ''
-    - title: Схожі товари
-      url: published/backend/similar-products/
-    - title: Фаза 5
-      url: ''
-    published/backend/similar-products/PHASE-6/:
-    - title: Головна
-      url: ''
-    - title: Схожі товари
-      url: published/backend/similar-products/
-    - title: Фаза 6
       url: ''
     published/backend/similar-products/:
     - title: Головна
@@ -172,13 +114,6 @@ extra:
           description: Покрокова інструкція для менеджера
           path: published/backend/accessories/accessories-guide-with-flow.md
           url: published/backend/accessories/accessories-guide-with-flow/
-      - title: Технічна документація
-        key: Технічна документація|published/backend/accessories/accessories-processing-pipeline.md
-        pages:
-        - title: Архітектура обробки аксесуарів
-          description: ''
-          path: published/backend/accessories/accessories-processing-pipeline.md
-          url: published/backend/accessories/accessories-processing-pipeline/
     - title: Схожі товари
       url: published/backend/similar-products/
       groups: &id002
@@ -189,33 +124,6 @@ extra:
           description: Покрокова інструкція для менеджера
           path: published/backend/similar-products/similar_products.md
           url: published/backend/similar-products/similar_products/
-      - title: Технічна документація
-        key: Технічна документація|published/backend/similar-products/PHASE-1.md|published/backend/similar-products/PHASE-2.md|published/backend/similar-products/PHASE-3.md|published/backend/similar-products/PHASE-4.md|published/backend/similar-products/PHASE-5.md|published/backend/similar-products/PHASE-6.md
-        pages:
-        - title: Фаза 1
-          description: ''
-          path: published/backend/similar-products/PHASE-1.md
-          url: published/backend/similar-products/PHASE-1/
-        - title: Фаза 2
-          description: ''
-          path: published/backend/similar-products/PHASE-2.md
-          url: published/backend/similar-products/PHASE-2/
-        - title: Фаза 3
-          description: ''
-          path: published/backend/similar-products/PHASE-3.md
-          url: published/backend/similar-products/PHASE-3/
-        - title: Фаза 4
-          description: ''
-          path: published/backend/similar-products/PHASE-4.md
-          url: published/backend/similar-products/PHASE-4/
-        - title: Фаза 5
-          description: ''
-          path: published/backend/similar-products/PHASE-5.md
-          url: published/backend/similar-products/PHASE-5/
-        - title: Фаза 6
-          description: ''
-          path: published/backend/similar-products/PHASE-6.md
-          url: published/backend/similar-products/PHASE-6/
     - title: Cортування товарів
       url: published/backend/catalog/sorting/
       groups: &id003

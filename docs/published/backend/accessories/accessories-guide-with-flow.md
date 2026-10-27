@@ -947,7 +947,7 @@ RU: — (Magento)
 2. **Second Sort** — застосовується, коли значення першого критерію однакові;
 3. **Third Sort** — застосовується, коли однакові перші два значення.
 
-Доступні критерії: **Найпопулярніші**, **Найбільш переглядувані**, **Новинки**, **Найбільша знижка**, **Ціна: за зростанням**, **Ціна: за спаданням**, **Рейтинг** і **Позиція в категорії**.
+Доступні критерії: **За популярністю**, **За переглядами**, **Новинки**, **Найбільша знижка**, **Від дешевих до дорогих**, **Від дорогих до дешевих**, **Рейтинг** і **Позиція в категорії**.
 
 Критерії не можна повторювати. Не можна вибрати другий критерій без першого або третій без другого. Значення **«Не використовувати»** у всіх трьох полях означає, що глобальної послідовності немає.
 
@@ -1248,37 +1248,73 @@ RU label
 ```mermaid
 flowchart TB
     A["**1. Категорії та правила**<br/>Основний товар → категорії аксесуарів"]
-    B{"**2. Як відібрати кандидатів?**"}
-    D["**Direct Rule**<br/>Детермінована ротація"]
-    C["**Calculated Rule**<br/>Сумісність AND → пріоритет"]
-    I[("**3. Індекс кандидатів**<br/>expert_accessory_product_index")]
-    G["**4. Конфігурація сортування**<br/>Глобальна або основної категорії"]
-    P[("**5. Індекс сортування**<br/>expert_accessory_product_sort_index<br/>final_rank + ready")]
-    S["**6. Вітрина**<br/>Готовий порядок / Legacy fallback<br/>→ MSI → ліміти → групи"]
-    O["**PDP · Кошик · Add-to-Cart Modal**"]
+    E["Перевірка кандидатів<br/>Enabled + Visibility"]
+    X{"Виключати товари не в наявності<br/>під час індексації?"}
+    Y["ТАК<br/>MSI: лише товари в наявності"]
+    N["НІ<br/>Усі допустимі товари<br/>в наявності + не в наявності"]
 
-    A --> B
-    B -->|Без умов| D
-    B -->|З умовами| C
-    D -->|index_limit| I
-    C -->|index_limit| I
-    I --> G
-    G -.->|SortProjectionBuilder| P
-    I -->|Legacy candidates| S
-    P -.->|final_rank, якщо готовий| S
-    S --> O
+    B{"2. Тип правила"}
+    D["Direct Rule<br/>Без умов"]
+    R["Deterministic Rotation<br/>Циклічне зміщення<br/>sourceProductId + ruleId"]
+    DL["Вибірка index_limit"]
+
+    C["Calculated Rule<br/>З умовами"]
+    CP["Compatibility AND<br/>→ Priority"]
+    CL["Вибірка index_limit"]
+
+    I[("3. Індекс кандидатів<br/>expert_accessory_product_index")]
+
+    M["4. Багатокритеріальне сортування<br/>Локальні → глобальні → legacy"]
+    K1["Критерій 1 — продажі ↓"]
+    K2["Критерій 2 — перегляди ↓"]
+    K3["Критерій 3 — ціна ↑"]
+    P[("5. Індекс сортування<br/>expert_accessory_product_sort_index<br/>final_rank")]
+
+    S["6. Вітрина<br/>final_rank або legacy order"]
+    Q["Повторна перевірка MSI<br/>Актуальна наявність"]
+    V{"Виключення під час<br/>індексації увімкнено?"}
+    VS["ТАК<br/>Виключити недоступні<br/>Без добору нових кандидатів"]
+    VN["НІ<br/>Available First<br/>Спочатку доступні, потім недоступні"]
+    L["display_limit → групування"]
+    O["PDP · Кошик · Add-to-Cart Modal"]
+
+    A --> E --> X
+    X -->|Так| Y --> B
+    X -->|Ні| N --> B
+
+    B -->|Без умов| D --> R --> DL --> I
+    B -->|З умовами| C --> CP --> CL --> I
+
+    I --> M
+    M --> K1 --> K2 --> K3 --> P
+    P -->|Enabled + Ready| S
+    I -.->|Legacy fallback| S
+
+    S --> Q --> V
+    V -->|Так| VS --> L
+    V -->|Ні| VN --> L
+    L --> O
 
     classDef input fill:#f4f1ff,stroke:#9b85db,color:#30245b
     classDef logic fill:#f8f9fc,stroke:#c5ccdb,color:#242c40
+    classDef rotation fill:#fff3d6,stroke:#d6a34b,color:#634713
     classDef index fill:#e6f4ee,stroke:#82b5a0,color:#174d3d
+    classDef criterion fill:#fff8e8,stroke:#d8b96d,color:#604b1e
     classDef runtime fill:#e9f1ff,stroke:#82a8e6,color:#173c70
-    class A,G input
-    class B,C,D logic
+    classDef yes fill:#dcfce7,stroke:#16a34a,color:#166534
+    classDef no fill:#fef3c7,stroke:#d97706,color:#92400e
+
+    class A input
+    class E,X,B,D,DL,C,CP,CL,M,V logic
+    class R rotation
     class I,P index
-    class S,O runtime
+    class K1,K2,K3 criterion
+    class S,Q,L,O runtime
+    class Y,VS yes
+    class N,VN no
 ```
 
-> Якщо Mermaid не підтримується у переглядачі Markdown, короткий порядок: **правила → Direct Rule / Calculated Rule → Deterministic Rotation / сумісність і пріоритет → індекс кандидатів → глобальна або категоріальна конфігурація → sort projection → `final_rank` → PDP, кошик і Add-to-Cart Modal**.
+> Якщо Mermaid не підтримується у переглядачі Markdown, короткий порядок: **правила → відбір → індекс кандидатів → [опційний індекс сортування] → MSI та групування → вітрина**.
 
 **Детальний опис усіх механізмів — нижче.**
 
