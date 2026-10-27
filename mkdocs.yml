@@ -39,7 +39,7 @@ nav:
   - Аксесуари:
     - Огляд: published/backend/accessories/index.md
     - Посібники користувача:
-      - Керування правилами аксесуарів: published/backend/accessories/accessories-guide.md
+      - Керування правилами аксесуарів: published/backend/accessories/accessories-guide-with-flow.md
     - Технічна документація:
       - Архітектура обробки аксесуарів: published/backend/accessories/accessories-processing-pipeline.md
   - Схожі товари:
@@ -74,7 +74,7 @@ extra:
     page_count: 6
     url: published/backend/similar-products/PHASE-1/
   portal_breadcrumbs:
-    published/backend/accessories/accessories-guide/:
+    published/backend/accessories/accessories-guide-with-flow/:
     - title: Головна
       url: ''
     - title: Аксесуари
@@ -166,12 +166,12 @@ extra:
       url: published/backend/accessories/
       groups: &id001
       - title: Посібники користувача
-        key: Посібники користувача|published/backend/accessories/accessories-guide.md
+        key: Посібники користувача|published/backend/accessories/accessories-guide-with-flow.md
         pages:
         - title: Керування правилами аксесуарів
           description: Покрокова інструкція для менеджера
-          path: published/backend/accessories/accessories-guide.md
-          url: published/backend/accessories/accessories-guide/
+          path: published/backend/accessories/accessories-guide-with-flow.md
+          url: published/backend/accessories/accessories-guide-with-flow/
       - title: Технічна документація
         key: Технічна документація|published/backend/accessories/accessories-processing-pipeline.md
         pages:
