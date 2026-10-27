@@ -14,24 +14,33 @@
 
 Загальна логіка:
 
-```text
-Товар
-↓
-його категорія
-↓
-інші товари цієї ж категорії
-↓
-правила схожості
-↓
-розрахунок score
-↓
-TOP 30 у persistent index
-↓
-багатокритеріальне сортування (final_rank)
-↓
-runtime-відбір
-↓
-до 8 товарів на PDP
+```mermaid
+flowchart LR
+    subgraph A["1. Пошук"]
+        direction TB
+        A1["Товар"] --> A2["Категорія"]
+        A2 --> A3["Кандидати"]
+    end
+
+    subgraph B["2. Індексація"]
+        direction TB
+        B1["Правила схожості"] --> B2["Розрахунок score"]
+        B2 --> B3[("TOP 30")]
+    end
+
+    subgraph C["3. Сортування"]
+        direction TB
+        C1["Критерії сортування"] --> C2["final_rank"]
+    end
+
+    subgraph D["4. Відображення"]
+        direction TB
+        D1["Runtime-відбір"] --> D2["До 8 товарів на PDP"]
+    end
+
+    A3 --> B1
+    B3 --> C1
+    C2 --> D1
 ```
 
 > Важливо: модуль не використовує стандартні Magento Related Products, Up-sell або Cross-sell. Схожість розраховується окремим механізмом.
@@ -961,46 +970,38 @@ index
 
 ```mermaid
 flowchart TD
-    A["Вихідний товар і його категорія"]
-    B["Глобальні правила + правила категорії"]
-    C["Пул кандидатів із тієї самої категорії"]
-    D{"Виключати OOS під час індексації?"}
-    E["MSI: виключити недоступних кандидатів"]
-    F["SimilarityScorer: обчислити base_score"]
-    G["Відібрати TOP 30 за base_score DESC"]
-    H[("expert_similar_product_index<br/>кандидати + legacy rank")]
-    I{"Сортування увімкнено<br/>та є критерії?"}
-    J["SortMetricLoader: завантажити метрики"]
-    K["MultiCriteriaOrdering:<br/>критерій 1 → 2 → 3<br/>→ base_score DESC → product ID ASC"]
-    L["SortResultWriter:<br/>атомарно зберегти final_rank<br/>і source ready-state"]
-    M["Runtime: читання готового індексу"]
-    N{"final_rank готовий,<br/>актуальний та коректний?"}
-    O["Порядок за final_rank"]
-    P["Fallback: порядок за legacy rank"]
-    Q["MSI: політика наявності<br/>доступні перед недоступними"]
-    R["PDP: показати до 8 товарів"]
+    A["Правила схожості товарів"] --> B["Пошук кандидатів"]
+    B --> C["Розрахунок base_score"]
+    C --> D["Відбір TOP 30 кандидатів"]
+    D --> E[("expert_similar_product_index")]
 
-    subgraph S1["I. Підбір кандидатів та індексація"]
-      A --> B --> C --> D
-      D -- "Так" --> E --> F
-      D -- "Ні" --> F
-      F --> G --> H
-    end
+    E --> F{"Багатокритеріальне сортування увімкнено?"}
 
-    subgraph S2["II. Комерційне сортування під час rebuild"]
-      I -- "Так" --> J --> K --> L
-    end
+    F -->|Так| G["Критерій 1 → Критерій 2 → Критерій 3"]
+    G --> H["Tie-breaker: base_score DESC → product_id ASC"]
+    H --> I["Розрахунок final_rank"]
 
-    subgraph S3["III. Runtime / відображення"]
-      M --> N
-      N -- "Так" --> O --> Q
-      N -- "Ні" --> P --> Q
-      Q --> R
-    end
+    F -->|Ні| J["Legacy rank за схожістю"]
 
-    H --> I
-    I -- "Ні" --> M
-    L --> M
+    I --> K["Runtime Provider"]
+    J --> K
+
+    K --> L{"final_rank готовий та актуальний?"}
+    L -->|Так| M["Порядок за final_rank"]
+    L -->|Ні або вимкнено| N["Fallback на legacy rank"]
+
+    M --> O["MSI: перевірка наявності"]
+    N --> O
+
+    O --> P{"Виключати товари не в наявності?"}
+    P -->|Так| Q["Відфільтрувати відсутні товари"]
+    P -->|Ні| R["Спочатку в наявності, потім відсутні"]
+
+    Q --> S["Обмеження кількості товарів"]
+    R --> S
+
+    S --> T["PDP / Cart / Modal"]
+ 
 ```
 
 > Схема показує логічні шари, а не окремі HTTP-запити. Сортування й обчислення метрик відбуваються під час rebuild, **не при відкритті PDP**.
