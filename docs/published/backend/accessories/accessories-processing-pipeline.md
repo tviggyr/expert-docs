@@ -8,40 +8,52 @@
 ```mermaid
 flowchart TB
     A["1. Категорії та правила<br/>Основний товар → категорії аксесуарів"]
-    B{"2. Відбір кандидатів"}
+    E["Перевірка кандидатів<br/>Enabled + Visibility"]
+    X{"Виключати товари не в наявності<br/>під час індексації?"}
+    Y["ТАК<br/>MSI: лише товари в наявності"]
+    N["НІ<br/>Усі допустимі товари<br/>в наявності + не в наявності"]
 
-    D["Direct Rule<br/>Правила без умов"]
-    R["Deterministic Rotation<br/>Циклічне зміщення кандидатів<br/>source_product_id + rule_id"]
-    DL["Вибірка після ротації<br/>index_limit кандидатів"]
+    B{"2. Тип правила"}
+    D["Direct Rule<br/>Без умов"]
+    R["Deterministic Rotation<br/>Циклічне зміщення<br/>sourceProductId + ruleId"]
+    DL["Вибірка index_limit"]
 
-    C["Calculated Rule<br/>Умови сумісності AND"]
-    CP["Відбір за сумісністю<br/>та пріоритетами"]
-    CL["Обмеження вибірки<br/>index_limit"]
+    C["Calculated Rule<br/>З умовами"]
+    CP["Compatibility AND<br/>→ Priority"]
+    CL["Вибірка index_limit"]
 
     I[("3. Індекс кандидатів<br/>expert_accessory_product_index")]
 
-    M["4. Багатокритеріальне сортування<br/>До трьох критеріїв"]
+    M["4. Багатокритеріальне сортування<br/>Локальні → глобальні → legacy"]
     K1["Критерій 1 — продажі ↓"]
     K2["Критерій 2 — перегляди ↓"]
     K3["Критерій 3 — ціна ↑"]
-
     P[("5. Індекс сортування<br/>expert_accessory_product_sort_index<br/>final_rank")]
 
-    S["6. Вітрина<br/>Готовий порядок / fallback<br/>MSI → ліміти → групування"]
+    S["6. Вітрина<br/>final_rank або legacy order"]
+    Q["Повторна перевірка MSI<br/>Актуальна наявність"]
+    V{"Виключення під час<br/>індексації увімкнено?"}
+    VS["ТАК<br/>Виключити недоступні<br/>Без добору нових кандидатів"]
+    VN["НІ<br/>Available First<br/>Спочатку доступні, потім недоступні"]
+    L["display_limit → групування"]
     O["PDP · Кошик · Add-to-Cart Modal"]
 
-    A --> B
-    B -->|Без умов| D
-    B -->|З умовами| C
+    A --> E --> X
+    X -->|Так| Y --> B
+    X -->|Ні| N --> B
 
-    D --> R --> DL --> I
-    C --> CP --> CL --> I
+    B -->|Без умов| D --> R --> DL --> I
+    B -->|З умовами| C --> CP --> CL --> I
 
     I --> M
     M --> K1 --> K2 --> K3 --> P
-    P -->|enabled + ready| S
+    P -->|Enabled + Ready| S
     I -.->|Legacy fallback| S
-    S --> O
+
+    S --> Q --> V
+    V -->|Так| VS --> L
+    V -->|Ні| VN --> L
+    L --> O
 
     classDef input fill:#f4f1ff,stroke:#9b85db,color:#30245b
     classDef logic fill:#f8f9fc,stroke:#c5ccdb,color:#242c40
@@ -49,13 +61,17 @@ flowchart TB
     classDef index fill:#e6f4ee,stroke:#82b5a0,color:#174d3d
     classDef criterion fill:#fff8e8,stroke:#d8b96d,color:#604b1e
     classDef runtime fill:#e9f1ff,stroke:#82a8e6,color:#173c70
+    classDef yes fill:#dcfce7,stroke:#16a34a,color:#166534
+    classDef no fill:#fef3c7,stroke:#d97706,color:#92400e
 
     class A input
-    class B,D,DL,C,CP,CL,M logic
+    class E,X,B,D,DL,C,CP,CL,M,V logic
     class R rotation
     class I,P index
     class K1,K2,K3 criterion
-    class S,O runtime
+    class S,Q,L,O runtime
+    class Y,VS yes
+    class N,VN no
 ```
 
 
