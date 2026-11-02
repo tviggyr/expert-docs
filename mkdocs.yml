@@ -48,6 +48,10 @@ nav:
     - Огляд: published/backend/catalog/sorting/index.md
     - Посібники користувача:
       - Сортування каталогу товарів: published/backend/catalog/sorting/Sorting.md
+  - Верхні фільтри каталогу:
+    - Огляд: published/backend/catalog-filters/index.md
+    - Посібники та архітектура:
+      - Верхні фільтри каталогу — Інструкція для менеджера: published/backend/catalog-filters/catalog-filters-manager-guide.md
 extra_css:
 - assets/portal.css
 extra_javascript:
@@ -101,6 +105,18 @@ extra:
       url: ''
     - title: Cортування товарів
       url: ''
+    published/backend/catalog-filters/catalog-filters-manager-guide/:
+    - title: Головна
+      url: ''
+    - title: Верхні фільтри каталогу
+      url: published/backend/catalog-filters/
+    - title: Верхні фільтри каталогу — Інструкція для менеджера
+      url: ''
+    published/backend/catalog-filters/:
+    - title: Головна
+      url: ''
+    - title: Верхні фільтри каталогу
+      url: ''
   portal_tree:
   - title: Модулі Magento
     modules:
@@ -134,6 +150,16 @@ extra:
           description: Покрокове налаштування сортування каталогу та пошуку
           path: published/backend/catalog/sorting/Sorting.md
           url: published/backend/catalog/sorting/Sorting/
+    - title: Верхні фільтри каталогу
+      url: published/backend/catalog-filters/
+      groups: &id004
+      - title: Посібники та архітектура
+        key: Посібники та архітектура|published/backend/catalog-filters/catalog-filters-manager-guide.md
+        pages:
+        - title: Верхні фільтри каталогу — Інструкція для менеджера
+          description: ''
+          path: published/backend/catalog-filters/catalog-filters-manager-guide.md
+          url: published/backend/catalog-filters/catalog-filters-manager-guide/
   portal_catalogs:
     published/backend/accessories/:
       section: Модулі Magento
@@ -152,4 +178,10 @@ extra:
       title: Cортування товарів
       description: Покрокова інструкція для менеджера
       groups: *id003
+      has_source_index: false
+    published/backend/catalog-filters/:
+      section: Модулі Magento
+      title: Верхні фільтри каталогу
+      description: Правила відображення та прямі категорії пошуку
+      groups: *id004
       has_source_index: false
